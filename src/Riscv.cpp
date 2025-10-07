@@ -5,6 +5,11 @@
 #include "../h/Riscv.hpp"
 #include "../lib/hw.h"
 
+constexpr uint64 MEM_ALLOC = 0x01;
+constexpr uint64 MEM_FREE = 0x02;
+constexpr uint64 MEM_GET_FREE_SPACE = 0x03;
+constexpr uint64 MEM_GET_LARGEST_FREE_BLOCK = 0x04;
+
 void Riscv::setupTrapHandler() {
     unsigned long addr = (unsigned long)&trap_handler;
     asm volatile("csrw stvec, %0" :: "r"(addr));

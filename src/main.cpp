@@ -52,6 +52,14 @@ void main() {
         curr = curr->next;
     }
 
+    printString("Total free space: ");
+    printNumber(MemoryAllocator::mem_get_free_space());
+    printString("\n");
+
+    printString("Largest free block: ");
+    printNumber(MemoryAllocator::mem_get_largest_free_block());
+    printString("\n");
+
     MemoryAllocator::mem_free(p2);
     printString("Freed p2\n");
 
@@ -61,6 +69,14 @@ void main() {
         printString(" size "); printNumber(curr->size); printString("\n");
         curr = curr->next;
     }
+
+    printString("Total free space: ");
+    printNumber(MemoryAllocator::mem_get_free_space());
+    printString("\n");
+
+    printString("Largest free block: ");
+    printNumber(MemoryAllocator::mem_get_largest_free_block());
+    printString("\n");
 
     printString("Pre ecall\n");
 

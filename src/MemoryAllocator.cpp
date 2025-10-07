@@ -83,3 +83,26 @@ void MemoryAllocator::tryToJoin(BlockHeader* curr) {
         curr->next = curr->next->next;
     }
 }
+
+size_t MemoryAllocator::mem_get_free_space() {
+    size_t total = 0;
+
+    for (BlockHeader* curr = freeListHead; curr; curr = curr->next) {
+        if (curr->size > sizeof(BlockHeader)) {
+            total += curr->size - sizeof(BlockHeader);
+        }
+    }
+
+    return total;
+}
+
+size_t MemoryAllocator::mem_get_largest_free_block() {
+    size_t largest = 0;
+
+    for (BlockHeader* curr = freeListHead; curr; curr = curr->next) {
+        size_t usable = (curr->size > sizeof(BlockHeader)) ? curr->size - sizeof(BlockHeader) : 0;
+        if (usable > largest) largest = usable;
+    }
+
+    return largest;
+}

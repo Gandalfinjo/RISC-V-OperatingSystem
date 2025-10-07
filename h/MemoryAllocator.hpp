@@ -17,6 +17,8 @@ public:
     static void initHeap();
     static void* mem_alloc(size_t); // size in bytes
     static int mem_free(void*);
+    static size_t mem_get_free_space();
+    static size_t mem_get_largest_free_block();
 
     static BlockHeader* freeListHead; // public only for testing, in later phases return it to private
 private:

@@ -1,0 +1,92 @@
+GAS LISTING /tmp/cccxQe1J.s 			page 1
+
+
+   1              		.file	"kernel_init.cpp"
+   2              		.option pic
+   3              		.option norelax
+   4              		.text
+   5              	.Ltext0:
+   6              		.align	2
+   7              		.globl	_Z17setup_trap_vectorv
+   9              	_Z17setup_trap_vectorv:
+  10              	.LFB0:
+  11              		.file 1 "src/kernel_init.cpp"
+   1:src/kernel_init.cpp **** //
+   2:src/kernel_init.cpp **** // Created by os on 10/7/25.
+   3:src/kernel_init.cpp **** //
+   4:src/kernel_init.cpp **** 
+   5:src/kernel_init.cpp **** extern "C" void trap_handler();
+   6:src/kernel_init.cpp **** 
+   7:src/kernel_init.cpp **** void setup_trap_vector() {
+  12              		.loc 1 7 26
+  13              		.cfi_startproc
+  14 0000 130101FF 		addi	sp,sp,-16
+  15              		.cfi_def_cfa_offset 16
+  16 0004 23348100 		sd	s0,8(sp)
+  17              		.cfi_offset 8, -8
+  18 0008 13040101 		addi	s0,sp,16
+  19              		.cfi_def_cfa 8, 0
+   8:src/kernel_init.cpp ****     unsigned long addr = (unsigned long)&trap_handler;
+  20              		.loc 1 8 5
+  21              		.loc 1 8 19 is_stmt 0
+  22 000c 97070000 		la	a5,trap_handler
+  22      83B70700 
+  23              	.LVL0:
+   9:src/kernel_init.cpp ****     asm volatile("csrw stvec, %0" :: "r"(addr));
+  24              		.loc 1 9 5 is_stmt 1
+  25              		.loc 1 9 48 is_stmt 0
+  26              	#APP
+  27              	# 9 "src/kernel_init.cpp" 1
+  10              	}...
+  28              		csrw stvec, a5
+  29              	# 0 "" 2
+  30              		.loc 1 10 1
+  31              	#NO_APP
+  32 0018 03348100 		ld	s0,8(sp)
+  33              		.cfi_restore 8
+  34              		.cfi_def_cfa 2, 16
+  35 001c 13010101 		addi	sp,sp,16
+  36              		.cfi_def_cfa_offset 0
+  37 0020 67800000 		jr	ra
+  38              		.cfi_endproc
+  39              	.LFE0:
+  41              	.Letext0:
+GAS LISTING /tmp/cccxQe1J.s 			page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 kernel_init.cpp
+     /tmp/cccxQe1J.s:9      .text:0000000000000000 _Z17setup_trap_vectorv
+     /tmp/cccxQe1J.s:13     .text:0000000000000000 .L0 
+     /tmp/cccxQe1J.s:14     .text:0000000000000000 .L0 
+     /tmp/cccxQe1J.s:15     .text:0000000000000004 .L0 
+     /tmp/cccxQe1J.s:17     .text:0000000000000008 .L0 
+     /tmp/cccxQe1J.s:19     .text:000000000000000c .L0 
+     /tmp/cccxQe1J.s:21     .text:000000000000000c .L0 
+     /tmp/cccxQe1J.s:22     .text:000000000000000c .L0 
+     /tmp/cccxQe1J.s:25     .text:0000000000000014 .L0 
+ src/kernel_init.cpp:9      .text:0000000000000014 .L0 
+     /tmp/cccxQe1J.s:32     .text:0000000000000018 .L0 
+     /tmp/cccxQe1J.s:33     .text:000000000000001c .L0 
+     /tmp/cccxQe1J.s:34     .text:000000000000001c .L0 
+     /tmp/cccxQe1J.s:36     .text:0000000000000020 .L0 
+     /tmp/cccxQe1J.s:38     .text:0000000000000024 .L0 
+     /tmp/cccxQe1J.s:42     .text:0000000000000024 .L0 
+     /tmp/cccxQe1J.s:22     .text:000000000000000c .L0 
+     /tmp/cccxQe1J.s:80     .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+     /tmp/cccxQe1J.s:171    .debug_str:000000000000001e .LASF0
+     /tmp/cccxQe1J.s:181    .debug_str:0000000000000122 .LASF1
+     /tmp/cccxQe1J.s:169    .debug_str:0000000000000000 .LASF2
+     /tmp/cccxQe1J.s:5      .text:0000000000000000 .Ltext0
+     /tmp/cccxQe1J.s:41     .text:0000000000000024 .Letext0
+     /tmp/cccxQe1J.s:167    .debug_line:0000000000000000 .Ldebug_line0
+     /tmp/cccxQe1J.s:179    .debug_str:0000000000000110 .LASF3
+     /tmp/cccxQe1J.s:173    .debug_str:00000000000000e2 .LASF4
+     /tmp/cccxQe1J.s:10     .text:0000000000000000 .LFB0
+     /tmp/cccxQe1J.s:39     .text:0000000000000024 .LFE0
+     /tmp/cccxQe1J.s:175    .debug_str:00000000000000f9 .LASF5
+     /tmp/cccxQe1J.s:177    .debug_str:00000000000000fe .LASF6
+     /tmp/cccxQe1J.s:43     .debug_info:0000000000000000 .Ldebug_info0
+
+UNDEFINED SYMBOLS
+trap_handler

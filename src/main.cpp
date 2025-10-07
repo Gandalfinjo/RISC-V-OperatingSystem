@@ -1,6 +1,15 @@
 #include "../h/MemoryAllocator.hpp"
+#include "../h/Riscv.hpp"
 #include "../lib/console.h"
 #include "../lib/hw.h"
+
+void test_ecall() {
+    asm volatile (
+        "li a0, 0\n"
+        "li a7, 0xDE\n"
+        "ecall\n"
+    );
+}
 
 void printChar(char c) { __putc(c); }
 void printString(const char* s) { while(*s) __putc(*s++); }
@@ -18,6 +27,7 @@ void printPointer(void* ptr) {
 
 void main() {
     MemoryAllocator::initHeap();
+    Riscv::setupTrapHandler();
 
     BlockHeader* curr = MemoryAllocator::freeListHead;
     while(curr) {
@@ -51,4 +61,10 @@ void main() {
         printString(" size "); printNumber(curr->size); printString("\n");
         curr = curr->next;
     }
+
+    printString("Pre ecall\n");
+
+    test_ecall();
+
+    printString("After ecall\n");
 }

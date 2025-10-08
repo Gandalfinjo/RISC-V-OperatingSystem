@@ -1,0 +1,435 @@
+GAS LISTING /tmp/cc51sBvc.s 			page 1
+
+
+   1              		.file	"syscall_c.cpp"
+   2              		.option pic
+   3              		.option norelax
+   4              		.text
+   5              	.Ltext0:
+   6              		.align	2
+   7              		.globl	_Z9mem_allocm
+   9              	_Z9mem_allocm:
+  10              	.LFB0:
+  11              		.file 1 "src/syscall_c.cpp"
+   1:src/syscall_c.cpp **** //
+   2:src/syscall_c.cpp **** // Created by os on 10/7/25.
+   3:src/syscall_c.cpp **** //
+   4:src/syscall_c.cpp **** 
+   5:src/syscall_c.cpp **** #include "../h/syscall_c.hpp"
+   6:src/syscall_c.cpp **** 
+   7:src/syscall_c.cpp **** void* mem_alloc(size_t size) {
+  12              		.loc 1 7 30
+  13              		.cfi_startproc
+  14              	.LVL0:
+  15 0000 130101FF 		addi	sp,sp,-16
+  16              		.cfi_def_cfa_offset 16
+  17 0004 23348100 		sd	s0,8(sp)
+  18              		.cfi_offset 8, -8
+  19 0008 13040101 		addi	s0,sp,16
+  20              		.cfi_def_cfa 8, 0
+   8:src/syscall_c.cpp ****     if (size == 0) return nullptr;
+  21              		.loc 1 8 5
+  22 000c 63080502 		beqz	a0,.L4
+   9:src/syscall_c.cpp **** 
+  10:src/syscall_c.cpp ****     size_t blocks = size / MEM_BLOCK_SIZE;
+  23              		.loc 1 10 5
+  24              		.loc 1 10 12 is_stmt 0
+  25 0010 93576500 		srli	a5,a0,6
+  26              	.LVL1:
+  11:src/syscall_c.cpp ****     if (size % MEM_BLOCK_SIZE != 0) blocks++;
+  27              		.loc 1 11 5 is_stmt 1
+  28              		.loc 1 11 14 is_stmt 0
+  29 0014 1375F503 		andi	a0,a0,63
+  30              	.LVL2:
+  31              		.loc 1 11 5
+  32 0018 63040500 		beqz	a0,.L3
+  33              		.loc 1 11 37 is_stmt 1 discriminator 1
+  34              		.loc 1 11 43 is_stmt 0 discriminator 1
+  35 001c 93871700 		addi	a5,a5,1
+  36              	.LVL3:
+  37              	.L3:
+  12:src/syscall_c.cpp **** 
+  13:src/syscall_c.cpp ****     void* result;
+  38              		.loc 1 13 5 is_stmt 1
+  14:src/syscall_c.cpp ****     asm volatile("mv a1, %0" :: "r"(blocks));
+  39              		.loc 1 14 5
+  40              		.loc 1 14 45 is_stmt 0
+  41              	#APP
+  42              	# 14 "src/syscall_c.cpp" 1
+  15              	    asm volatile("li a0, 0x01");
+  43              		mv a1, a5
+GAS LISTING /tmp/cc51sBvc.s 			page 2
+
+
+  44              	# 0 "" 2
+  45              		.loc 1 15 5 is_stmt 1
+  46              		.loc 1 15 32 is_stmt 0
+  47              	# 15 "src/syscall_c.cpp" 1
+  16              	    asm volatile("ecall");
+  48              		li a0, 0x01
+  49              	# 0 "" 2
+  50              		.loc 1 16 5 is_stmt 1
+  51              		.loc 1 16 26 is_stmt 0
+  52              	# 16 "src/syscall_c.cpp" 1
+  17              	    asm volatile("mv %0, a0" : "=r"(result));
+  53              		ecall
+  54              	# 0 "" 2
+  55              		.loc 1 17 5 is_stmt 1
+  56              		.loc 1 17 45 is_stmt 0
+  57              	# 17 "src/syscall_c.cpp" 1
+  18              	    return result;
+  58              		mv a0, a0
+  59              	# 0 "" 2
+  60              	.LVL4:
+  61              		.loc 1 18 5 is_stmt 1
+  62              	#NO_APP
+  63              	.L1:
+  19:src/syscall_c.cpp **** }
+  64              		.loc 1 19 1 is_stmt 0
+  65 0030 03348100 		ld	s0,8(sp)
+  66              		.cfi_remember_state
+  67              		.cfi_restore 8
+  68              		.cfi_def_cfa 2, 16
+  69 0034 13010101 		addi	sp,sp,16
+  70              		.cfi_def_cfa_offset 0
+  71 0038 67800000 		jr	ra
+  72              	.LVL5:
+  73              	.L4:
+  74              		.cfi_restore_state
+   8:src/syscall_c.cpp **** 
+  75              		.loc 1 8 27
+  76 003c 13050000 		li	a0,0
+  77              	.LVL6:
+  78 0040 6FF01FFF 		j	.L1
+  79              		.cfi_endproc
+  80              	.LFE0:
+  82              		.align	2
+  83              		.globl	_Z8mem_freePv
+  85              	_Z8mem_freePv:
+  86              	.LFB1:
+  20:src/syscall_c.cpp **** 
+  21:src/syscall_c.cpp **** int mem_free(void* addr) {
+  87              		.loc 1 21 26 is_stmt 1
+  88              		.cfi_startproc
+  89              	.LVL7:
+  90 0044 130101FF 		addi	sp,sp,-16
+  91              		.cfi_def_cfa_offset 16
+  92 0048 23348100 		sd	s0,8(sp)
+  93              		.cfi_offset 8, -8
+  94 004c 13040101 		addi	s0,sp,16
+  95              		.cfi_def_cfa 8, 0
+GAS LISTING /tmp/cc51sBvc.s 			page 3
+
+
+  22:src/syscall_c.cpp ****     int result;
+  96              		.loc 1 22 5
+  23:src/syscall_c.cpp ****     asm volatile("mv a1, %0" :: "r"(addr));
+  97              		.loc 1 23 5
+  98              		.loc 1 23 43 is_stmt 0
+  99              	#APP
+ 100              	# 23 "src/syscall_c.cpp" 1
+  24              	    asm volatile("li a0, 0x02");
+ 101              		mv a1, a0
+ 102              	# 0 "" 2
+ 103              		.loc 1 24 5 is_stmt 1
+ 104              		.loc 1 24 32 is_stmt 0
+ 105              	# 24 "src/syscall_c.cpp" 1
+  25              	    asm volatile("ecall");
+ 106              		li a0, 0x02
+ 107              	# 0 "" 2
+ 108              		.loc 1 25 5 is_stmt 1
+ 109              		.loc 1 25 26 is_stmt 0
+ 110              	# 25 "src/syscall_c.cpp" 1
+  26              	    asm volatile("mv %0, a0" : "=r"(result));
+ 111              		ecall
+ 112              	# 0 "" 2
+ 113              		.loc 1 26 5 is_stmt 1
+ 114              		.loc 1 26 45 is_stmt 0
+ 115              	# 26 "src/syscall_c.cpp" 1
+  27              	    return result;
+ 116              		mv a0, a0
+ 117              	# 0 "" 2
+ 118              	.LVL8:
+ 119              		.loc 1 27 5 is_stmt 1
+  28:src/syscall_c.cpp **** }
+ 120              		.loc 1 28 1 is_stmt 0
+ 121              	#NO_APP
+ 122 0060 1B050500 		sext.w	a0,a0
+ 123 0064 03348100 		ld	s0,8(sp)
+ 124              		.cfi_restore 8
+ 125              		.cfi_def_cfa 2, 16
+ 126 0068 13010101 		addi	sp,sp,16
+ 127              		.cfi_def_cfa_offset 0
+ 128 006c 67800000 		jr	ra
+ 129              		.cfi_endproc
+ 130              	.LFE1:
+ 132              		.align	2
+ 133              		.globl	_Z18mem_get_free_spacev
+ 135              	_Z18mem_get_free_spacev:
+ 136              	.LFB2:
+  29:src/syscall_c.cpp **** 
+  30:src/syscall_c.cpp **** size_t mem_get_free_space() {
+ 137              		.loc 1 30 29 is_stmt 1
+ 138              		.cfi_startproc
+ 139 0070 130101FF 		addi	sp,sp,-16
+ 140              		.cfi_def_cfa_offset 16
+ 141 0074 23348100 		sd	s0,8(sp)
+ 142              		.cfi_offset 8, -8
+ 143 0078 13040101 		addi	s0,sp,16
+ 144              		.cfi_def_cfa 8, 0
+  31:src/syscall_c.cpp ****     size_t result;
+GAS LISTING /tmp/cc51sBvc.s 			page 4
+
+
+ 145              		.loc 1 31 5
+  32:src/syscall_c.cpp ****     asm volatile("li a0, 0x03");
+ 146              		.loc 1 32 5
+ 147              		.loc 1 32 32 is_stmt 0
+ 148              	#APP
+ 149              	# 32 "src/syscall_c.cpp" 1
+  33              	    asm volatile("ecall");
+ 150              		li a0, 0x03
+ 151              	# 0 "" 2
+ 152              		.loc 1 33 5 is_stmt 1
+ 153              		.loc 1 33 26 is_stmt 0
+ 154              	# 33 "src/syscall_c.cpp" 1
+  34              	    asm volatile("mv %0, a0" : "=r"(result));
+ 155              		ecall
+ 156              	# 0 "" 2
+ 157              		.loc 1 34 5 is_stmt 1
+ 158              		.loc 1 34 45 is_stmt 0
+ 159              	# 34 "src/syscall_c.cpp" 1
+  35              	    return result;
+ 160              		mv a0, a0
+ 161              	# 0 "" 2
+ 162              	.LVL9:
+ 163              		.loc 1 35 5 is_stmt 1
+  36:src/syscall_c.cpp **** }
+ 164              		.loc 1 36 1 is_stmt 0
+ 165              	#NO_APP
+ 166 0088 03348100 		ld	s0,8(sp)
+ 167              		.cfi_restore 8
+ 168              		.cfi_def_cfa 2, 16
+ 169 008c 13010101 		addi	sp,sp,16
+ 170              		.cfi_def_cfa_offset 0
+ 171 0090 67800000 		jr	ra
+ 172              		.cfi_endproc
+ 173              	.LFE2:
+ 175              		.align	2
+ 176              		.globl	_Z26mem_get_largest_free_blockv
+ 178              	_Z26mem_get_largest_free_blockv:
+ 179              	.LFB3:
+  37:src/syscall_c.cpp **** 
+  38:src/syscall_c.cpp **** size_t mem_get_largest_free_block() {
+ 180              		.loc 1 38 37 is_stmt 1
+ 181              		.cfi_startproc
+ 182 0094 130101FF 		addi	sp,sp,-16
+ 183              		.cfi_def_cfa_offset 16
+ 184 0098 23348100 		sd	s0,8(sp)
+ 185              		.cfi_offset 8, -8
+ 186 009c 13040101 		addi	s0,sp,16
+ 187              		.cfi_def_cfa 8, 0
+  39:src/syscall_c.cpp ****     size_t result;
+ 188              		.loc 1 39 5
+  40:src/syscall_c.cpp ****     asm volatile("li a0, 0x04");
+ 189              		.loc 1 40 5
+ 190              		.loc 1 40 32 is_stmt 0
+ 191              	#APP
+ 192              	# 40 "src/syscall_c.cpp" 1
+  41              	    asm volatile("ecall");
+ 193              		li a0, 0x04
+GAS LISTING /tmp/cc51sBvc.s 			page 5
+
+
+ 194              	# 0 "" 2
+ 195              		.loc 1 41 5 is_stmt 1
+ 196              		.loc 1 41 26 is_stmt 0
+ 197              	# 41 "src/syscall_c.cpp" 1
+  42              	    asm volatile("mv %0, a0" : "=r"(result));
+ 198              		ecall
+ 199              	# 0 "" 2
+ 200              		.loc 1 42 5 is_stmt 1
+ 201              		.loc 1 42 45 is_stmt 0
+ 202              	# 42 "src/syscall_c.cpp" 1
+  43              	    return result;
+ 203              		mv a0, a0
+ 204              	# 0 "" 2
+ 205              	.LVL10:
+ 206              		.loc 1 43 5 is_stmt 1
+  44:src/syscall_c.cpp **** }...
+ 207              		.loc 1 44 1 is_stmt 0
+ 208              	#NO_APP
+ 209 00ac 03348100 		ld	s0,8(sp)
+ 210              		.cfi_restore 8
+ 211              		.cfi_def_cfa 2, 16
+ 212 00b0 13010101 		addi	sp,sp,16
+ 213              		.cfi_def_cfa_offset 0
+ 214 00b4 67800000 		jr	ra
+ 215              		.cfi_endproc
+ 216              	.LFE3:
+ 218              	.Letext0:
+ 219              		.file 2 "src/../h/../lib/hw.h"
+GAS LISTING /tmp/cc51sBvc.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 syscall_c.cpp
+     /tmp/cc51sBvc.s:9      .text:0000000000000000 _Z9mem_allocm
+     /tmp/cc51sBvc.s:13     .text:0000000000000000 .L0 
+     /tmp/cc51sBvc.s:15     .text:0000000000000000 .L0 
+     /tmp/cc51sBvc.s:16     .text:0000000000000004 .L0 
+     /tmp/cc51sBvc.s:18     .text:0000000000000008 .L0 
+     /tmp/cc51sBvc.s:20     .text:000000000000000c .L0 
+     /tmp/cc51sBvc.s:22     .text:000000000000000c .L0 
+     /tmp/cc51sBvc.s:24     .text:0000000000000010 .L0 
+     /tmp/cc51sBvc.s:25     .text:0000000000000010 .L0 
+     /tmp/cc51sBvc.s:28     .text:0000000000000014 .L0 
+     /tmp/cc51sBvc.s:29     .text:0000000000000014 .L0 
+     /tmp/cc51sBvc.s:32     .text:0000000000000018 .L0 
+     /tmp/cc51sBvc.s:34     .text:000000000000001c .L0 
+     /tmp/cc51sBvc.s:35     .text:000000000000001c .L0 
+     /tmp/cc51sBvc.s:39     .text:0000000000000020 .L0 
+     /tmp/cc51sBvc.s:40     .text:0000000000000020 .L0 
+   src/syscall_c.cpp:14     .text:0000000000000020 .L0 
+     /tmp/cc51sBvc.s:46     .text:0000000000000024 .L0 
+   src/syscall_c.cpp:15     .text:0000000000000024 .L0 
+     /tmp/cc51sBvc.s:51     .text:0000000000000028 .L0 
+   src/syscall_c.cpp:16     .text:0000000000000028 .L0 
+     /tmp/cc51sBvc.s:56     .text:000000000000002c .L0 
+   src/syscall_c.cpp:17     .text:000000000000002c .L0 
+     /tmp/cc51sBvc.s:64     .text:0000000000000030 .L0 
+     /tmp/cc51sBvc.s:65     .text:0000000000000030 .L0 
+     /tmp/cc51sBvc.s:66     .text:0000000000000034 .L0 
+     /tmp/cc51sBvc.s:67     .text:0000000000000034 .L0 
+     /tmp/cc51sBvc.s:68     .text:0000000000000034 .L0 
+     /tmp/cc51sBvc.s:70     .text:0000000000000038 .L0 
+     /tmp/cc51sBvc.s:74     .text:000000000000003c .L0 
+     /tmp/cc51sBvc.s:76     .text:000000000000003c .L0 
+     /tmp/cc51sBvc.s:79     .text:0000000000000044 .L0 
+     /tmp/cc51sBvc.s:85     .text:0000000000000044 _Z8mem_freePv
+     /tmp/cc51sBvc.s:88     .text:0000000000000044 .L0 
+     /tmp/cc51sBvc.s:90     .text:0000000000000044 .L0 
+     /tmp/cc51sBvc.s:91     .text:0000000000000048 .L0 
+     /tmp/cc51sBvc.s:93     .text:000000000000004c .L0 
+     /tmp/cc51sBvc.s:95     .text:0000000000000050 .L0 
+     /tmp/cc51sBvc.s:97     .text:0000000000000050 .L0 
+     /tmp/cc51sBvc.s:98     .text:0000000000000050 .L0 
+   src/syscall_c.cpp:23     .text:0000000000000050 .L0 
+     /tmp/cc51sBvc.s:104    .text:0000000000000054 .L0 
+   src/syscall_c.cpp:24     .text:0000000000000054 .L0 
+     /tmp/cc51sBvc.s:109    .text:0000000000000058 .L0 
+   src/syscall_c.cpp:25     .text:0000000000000058 .L0 
+     /tmp/cc51sBvc.s:114    .text:000000000000005c .L0 
+   src/syscall_c.cpp:26     .text:000000000000005c .L0 
+     /tmp/cc51sBvc.s:120    .text:0000000000000060 .L0 
+     /tmp/cc51sBvc.s:122    .text:0000000000000060 .L0 
+     /tmp/cc51sBvc.s:124    .text:0000000000000068 .L0 
+     /tmp/cc51sBvc.s:125    .text:0000000000000068 .L0 
+     /tmp/cc51sBvc.s:127    .text:000000000000006c .L0 
+     /tmp/cc51sBvc.s:129    .text:0000000000000070 .L0 
+     /tmp/cc51sBvc.s:135    .text:0000000000000070 _Z18mem_get_free_spacev
+     /tmp/cc51sBvc.s:138    .text:0000000000000070 .L0 
+GAS LISTING /tmp/cc51sBvc.s 			page 7
+
+
+     /tmp/cc51sBvc.s:139    .text:0000000000000070 .L0 
+     /tmp/cc51sBvc.s:140    .text:0000000000000074 .L0 
+     /tmp/cc51sBvc.s:142    .text:0000000000000078 .L0 
+     /tmp/cc51sBvc.s:144    .text:000000000000007c .L0 
+     /tmp/cc51sBvc.s:146    .text:000000000000007c .L0 
+     /tmp/cc51sBvc.s:147    .text:000000000000007c .L0 
+   src/syscall_c.cpp:32     .text:000000000000007c .L0 
+     /tmp/cc51sBvc.s:153    .text:0000000000000080 .L0 
+   src/syscall_c.cpp:33     .text:0000000000000080 .L0 
+     /tmp/cc51sBvc.s:158    .text:0000000000000084 .L0 
+   src/syscall_c.cpp:34     .text:0000000000000084 .L0 
+     /tmp/cc51sBvc.s:164    .text:0000000000000088 .L0 
+     /tmp/cc51sBvc.s:166    .text:0000000000000088 .L0 
+     /tmp/cc51sBvc.s:167    .text:000000000000008c .L0 
+     /tmp/cc51sBvc.s:168    .text:000000000000008c .L0 
+     /tmp/cc51sBvc.s:170    .text:0000000000000090 .L0 
+     /tmp/cc51sBvc.s:172    .text:0000000000000094 .L0 
+     /tmp/cc51sBvc.s:178    .text:0000000000000094 _Z26mem_get_largest_free_blockv
+     /tmp/cc51sBvc.s:181    .text:0000000000000094 .L0 
+     /tmp/cc51sBvc.s:182    .text:0000000000000094 .L0 
+     /tmp/cc51sBvc.s:183    .text:0000000000000098 .L0 
+     /tmp/cc51sBvc.s:185    .text:000000000000009c .L0 
+     /tmp/cc51sBvc.s:187    .text:00000000000000a0 .L0 
+     /tmp/cc51sBvc.s:189    .text:00000000000000a0 .L0 
+     /tmp/cc51sBvc.s:190    .text:00000000000000a0 .L0 
+   src/syscall_c.cpp:40     .text:00000000000000a0 .L0 
+     /tmp/cc51sBvc.s:196    .text:00000000000000a4 .L0 
+   src/syscall_c.cpp:41     .text:00000000000000a4 .L0 
+     /tmp/cc51sBvc.s:201    .text:00000000000000a8 .L0 
+   src/syscall_c.cpp:42     .text:00000000000000a8 .L0 
+     /tmp/cc51sBvc.s:207    .text:00000000000000ac .L0 
+     /tmp/cc51sBvc.s:209    .text:00000000000000ac .L0 
+     /tmp/cc51sBvc.s:210    .text:00000000000000b0 .L0 
+     /tmp/cc51sBvc.s:211    .text:00000000000000b0 .L0 
+     /tmp/cc51sBvc.s:213    .text:00000000000000b4 .L0 
+     /tmp/cc51sBvc.s:215    .text:00000000000000b8 .L0 
+     /tmp/cc51sBvc.s:220    .text:00000000000000b8 .L0 
+     /tmp/cc51sBvc.s:73     .text:000000000000003c .L4
+     /tmp/cc51sBvc.s:37     .text:0000000000000020 .L3
+     /tmp/cc51sBvc.s:63     .text:0000000000000030 .L1
+     /tmp/cc51sBvc.s:452    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+     /tmp/cc51sBvc.s:824    .debug_str:0000000000000182 .LASF27
+     /tmp/cc51sBvc.s:810    .debug_str:0000000000000100 .LASF28
+     /tmp/cc51sBvc.s:796    .debug_str:0000000000000087 .LASF29
+     /tmp/cc51sBvc.s:5      .text:0000000000000000 .Ltext0
+     /tmp/cc51sBvc.s:218    .text:00000000000000b8 .Letext0
+     /tmp/cc51sBvc.s:774    .debug_line:0000000000000000 .Ldebug_line0
+     /tmp/cc51sBvc.s:776    .debug_str:0000000000000000 .LASF0
+     /tmp/cc51sBvc.s:822    .debug_str:000000000000016f .LASF1
+     /tmp/cc51sBvc.s:802    .debug_str:00000000000000ba .LASF2
+     /tmp/cc51sBvc.s:794    .debug_str:0000000000000080 .LASF4
+     /tmp/cc51sBvc.s:786    .debug_str:0000000000000041 .LASF3
+     /tmp/cc51sBvc.s:782    .debug_str:000000000000002a .LASF5
+     /tmp/cc51sBvc.s:792    .debug_str:000000000000006d .LASF6
+     /tmp/cc51sBvc.s:820    .debug_str:000000000000015c .LASF7
+     /tmp/cc51sBvc.s:830    .debug_str:000000000000025a .LASF8
+     /tmp/cc51sBvc.s:778    .debug_str:000000000000000d .LASF9
+GAS LISTING /tmp/cc51sBvc.s 			page 8
+
+
+     /tmp/cc51sBvc.s:780    .debug_str:000000000000001b .LASF10
+     /tmp/cc51sBvc.s:826    .debug_str:0000000000000246 .LASF11
+     /tmp/cc51sBvc.s:784    .debug_str:0000000000000031 .LASF12
+     /tmp/cc51sBvc.s:836    .debug_str:0000000000000279 .LASF13
+     /tmp/cc51sBvc.s:800    .debug_str:00000000000000ae .LASF14
+     /tmp/cc51sBvc.s:814    .debug_str:0000000000000120 .LASF15
+     /tmp/cc51sBvc.s:806    .debug_str:00000000000000cf .LASF16
+     /tmp/cc51sBvc.s:808    .debug_str:00000000000000e5 .LASF18
+     /tmp/cc51sBvc.s:838    .debug_str:0000000000000289 .LASF20
+     /tmp/cc51sBvc.s:179    .text:0000000000000094 .LFB3
+     /tmp/cc51sBvc.s:216    .text:00000000000000b8 .LFE3
+     /tmp/cc51sBvc.s:788    .debug_str:0000000000000053 .LASF17
+     /tmp/cc51sBvc.s:790    .debug_str:000000000000005a .LASF19
+     /tmp/cc51sBvc.s:816    .debug_str:0000000000000136 .LASF21
+     /tmp/cc51sBvc.s:136    .text:0000000000000070 .LFB2
+     /tmp/cc51sBvc.s:173    .text:0000000000000094 .LFE2
+     /tmp/cc51sBvc.s:798    .debug_str:00000000000000a5 .LASF22
+     /tmp/cc51sBvc.s:812    .debug_str:0000000000000112 .LASF23
+     /tmp/cc51sBvc.s:86     .text:0000000000000044 .LFB1
+     /tmp/cc51sBvc.s:130    .text:0000000000000070 .LFE1
+     /tmp/cc51sBvc.s:834    .debug_str:0000000000000274 .LASF24
+     /tmp/cc51sBvc.s:715    .debug_loc:0000000000000000 .LLST2
+     /tmp/cc51sBvc.s:832    .debug_str:000000000000026a .LASF30
+     /tmp/cc51sBvc.s:818    .debug_str:000000000000014e .LASF31
+     /tmp/cc51sBvc.s:10     .text:0000000000000000 .LFB0
+     /tmp/cc51sBvc.s:80     .text:0000000000000044 .LFE0
+     /tmp/cc51sBvc.s:828    .debug_str:0000000000000255 .LASF25
+     /tmp/cc51sBvc.s:729    .debug_loc:0000000000000039 .LLST0
+     /tmp/cc51sBvc.s:804    .debug_str:00000000000000c8 .LASF26
+     /tmp/cc51sBvc.s:754    .debug_loc:000000000000009b .LLST1
+     /tmp/cc51sBvc.s:89     .text:0000000000000044 .LVL7
+     /tmp/cc51sBvc.s:118    .text:0000000000000060 .LVL8
+     /tmp/cc51sBvc.s:14     .text:0000000000000000 .LVL0
+     /tmp/cc51sBvc.s:30     .text:0000000000000018 .LVL2
+     /tmp/cc51sBvc.s:72     .text:000000000000003c .LVL5
+     /tmp/cc51sBvc.s:77     .text:0000000000000040 .LVL6
+     /tmp/cc51sBvc.s:26     .text:0000000000000014 .LVL1
+     /tmp/cc51sBvc.s:60     .text:0000000000000030 .LVL4
+     /tmp/cc51sBvc.s:221    .debug_info:0000000000000000 .Ldebug_info0
+
+NO UNDEFINED SYMBOLS

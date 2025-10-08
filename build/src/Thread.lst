@@ -1,0 +1,681 @@
+GAS LISTING /tmp/cc478Req.s 			page 1
+
+
+   1              		.file	"Thread.cpp"
+   2              		.option pic
+   3              		.option norelax
+   4              		.text
+   5              	.Ltext0:
+   6              		.align	2
+   7              		.globl	_ZN6ThreadD2Ev
+   9              	_ZN6ThreadD2Ev:
+  10              	.LFB6:
+  11              		.file 1 "src/Thread.cpp"
+   1:src/Thread.cpp **** //
+   2:src/Thread.cpp **** // Created by os on 10/8/25.
+   3:src/Thread.cpp **** //
+   4:src/Thread.cpp **** 
+   5:src/Thread.cpp **** #include "../h/Thread.hpp"
+   6:src/Thread.cpp **** #include "../h/Scheduler.hpp"
+   7:src/Thread.cpp **** #include "../h/MemoryAllocator.hpp"
+   8:src/Thread.cpp **** #include "../lib/hw.h"
+   9:src/Thread.cpp **** 
+  10:src/Thread.cpp **** Thread* Thread::running = nullptr;
+  11:src/Thread.cpp **** 
+  12:src/Thread.cpp **** Thread::Thread(Body b, void* a, size_t stackSizeBytes)
+  13:src/Thread.cpp ****     : stack(nullptr), stackSize(stackSizeBytes), body(b), args(a), state(NEW), next(nullptr) {
+  14:src/Thread.cpp ****     allocateStack(stackSizeBytes);
+  15:src/Thread.cpp **** }
+  16:src/Thread.cpp **** 
+  17:src/Thread.cpp **** Thread::~Thread() {
+  12              		.loc 1 17 1
+  13              		.cfi_startproc
+  14              		.cfi_personality 0x9b,DW.ref.__gxx_personality_v0
+  15              		.cfi_lsda 0x1b,.LLSDA6
+  16              	.LVL0:
+  17              	.LBB2:
+  18:src/Thread.cpp ****     if (stack) {
+  18              		.loc 1 18 5
+  19              		.loc 1 18 9 is_stmt 0
+  20 0000 03358500 		ld	a0,8(a0)
+  21              	.LVL1:
+  22              		.loc 1 18 5
+  23 0004 63060502 		beqz	a0,.L4
+  24              	.LBE2:
+  17:src/Thread.cpp ****     if (stack) {
+  25              		.loc 1 17 1
+  26 0008 130101FF 		addi	sp,sp,-16
+  27              		.cfi_def_cfa_offset 16
+  28 000c 23341100 		sd	ra,8(sp)
+  29 0010 23308100 		sd	s0,0(sp)
+  30              		.cfi_offset 1, -8
+  31              		.cfi_offset 8, -16
+  32 0014 13040101 		addi	s0,sp,16
+  33              		.cfi_def_cfa 8, 0
+  34              	.LBB3:
+  19:src/Thread.cpp ****         MemoryAllocator::mem_free(stack);
+  35              		.loc 1 19 9 is_stmt 1
+  36              		.loc 1 19 34 is_stmt 0
+  37 0018 97000000 		call	_ZN15MemoryAllocator8mem_freeEPv@plt
+  37      E7800000 
+GAS LISTING /tmp/cc478Req.s 			page 2
+
+
+  38              	.LVL2:
+  20:src/Thread.cpp ****         stack = nullptr;
+  39              		.loc 1 20 9 is_stmt 1
+  40              	.LBE3:
+  21:src/Thread.cpp ****     }
+  22:src/Thread.cpp **** }
+  41              		.loc 1 22 1 is_stmt 0
+  42 0020 83308100 		ld	ra,8(sp)
+  43              		.cfi_restore 1
+  44 0024 03340100 		ld	s0,0(sp)
+  45              		.cfi_restore 8
+  46              		.cfi_def_cfa 2, 16
+  47 0028 13010101 		addi	sp,sp,16
+  48              		.cfi_def_cfa_offset 0
+  49 002c 67800000 		jr	ra
+  50              	.L4:
+  51 0030 67800000 		ret
+  52              		.cfi_endproc
+  53              	.LFE6:
+  54              		.globl	__gxx_personality_v0
+  55              		.section	.gcc_except_table,"a",@progbits
+  56              	.LLSDA6:
+  57 0000 FF       		.byte	0xff
+  58 0001 FF       		.byte	0xff
+  59 0002 03       		.byte	0x3
+  60 0003 00       		.byte	0
+  61              		.text
+  63              		.globl	_ZN6ThreadD1Ev
+  64              		.set	_ZN6ThreadD1Ev,_ZN6ThreadD2Ev
+  65              		.align	2
+  66              		.globl	_ZN6Thread13allocateStackEm
+  68              	_ZN6Thread13allocateStackEm:
+  69              	.LFB8:
+  23:src/Thread.cpp **** 
+  24:src/Thread.cpp **** void Thread::allocateStack(size_t bytes) {
+  70              		.loc 1 24 42 is_stmt 1
+  71              		.cfi_startproc
+  72              	.LVL3:
+  73 0034 130101FE 		addi	sp,sp,-32
+  74              		.cfi_def_cfa_offset 32
+  75 0038 233C1100 		sd	ra,24(sp)
+  76 003c 23388100 		sd	s0,16(sp)
+  77 0040 23349100 		sd	s1,8(sp)
+  78 0044 23302101 		sd	s2,0(sp)
+  79              		.cfi_offset 1, -8
+  80              		.cfi_offset 8, -16
+  81              		.cfi_offset 9, -24
+  82              		.cfi_offset 18, -32
+  83 0048 13040102 		addi	s0,sp,32
+  84              		.cfi_def_cfa 8, 0
+  85 004c 13090500 		mv	s2,a0
+  25:src/Thread.cpp ****     size_t blocks = bytes / MEM_BLOCK_SIZE;
+  86              		.loc 1 25 5
+  87              		.loc 1 25 12 is_stmt 0
+  88 0050 93D46500 		srli	s1,a1,6
+  89              	.LVL4:
+  26:src/Thread.cpp ****     if (bytes % MEM_BLOCK_SIZE != 0) blocks++;
+GAS LISTING /tmp/cc478Req.s 			page 3
+
+
+  90              		.loc 1 26 5 is_stmt 1
+  91              		.loc 1 26 15 is_stmt 0
+  92 0054 93F5F503 		andi	a1,a1,63
+  93              	.LVL5:
+  94              		.loc 1 26 5
+  95 0058 63840500 		beqz	a1,.L8
+  96              		.loc 1 26 38 is_stmt 1 discriminator 1
+  97              		.loc 1 26 44 is_stmt 0 discriminator 1
+  98 005c 93841400 		addi	s1,s1,1
+  99              	.LVL6:
+ 100              	.L8:
+  27:src/Thread.cpp **** 
+  28:src/Thread.cpp ****     stack = MemoryAllocator::mem_alloc(blocks);
+ 101              		.loc 1 28 5 is_stmt 1
+ 102              		.loc 1 28 39 is_stmt 0
+ 103 0060 13850400 		mv	a0,s1
+ 104              	.LVL7:
+ 105 0064 97000000 		call	_ZN15MemoryAllocator9mem_allocEm@plt
+ 105      E7800000 
+ 106              	.LVL8:
+ 107              		.loc 1 28 11
+ 108 006c 2334A900 		sd	a0,8(s2)
+  29:src/Thread.cpp ****     stackSize = blocks * MEM_BLOCK_SIZE;
+ 109              		.loc 1 29 5 is_stmt 1
+ 110              		.loc 1 29 24 is_stmt 0
+ 111 0070 93946400 		slli	s1,s1,6
+ 112              	.LVL9:
+ 113              		.loc 1 29 15
+ 114 0074 23389900 		sd	s1,16(s2)
+  30:src/Thread.cpp **** }
+ 115              		.loc 1 30 1
+ 116 0078 83308101 		ld	ra,24(sp)
+ 117              		.cfi_restore 1
+ 118 007c 03340101 		ld	s0,16(sp)
+ 119              		.cfi_restore 8
+ 120              		.cfi_def_cfa 2, 32
+ 121 0080 83348100 		ld	s1,8(sp)
+ 122              		.cfi_restore 9
+ 123 0084 03390100 		ld	s2,0(sp)
+ 124              		.cfi_restore 18
+ 125              	.LVL10:
+ 126 0088 13010102 		addi	sp,sp,32
+ 127              		.cfi_def_cfa_offset 0
+ 128 008c 67800000 		jr	ra
+ 129              		.cfi_endproc
+ 130              	.LFE8:
+ 132              		.align	2
+ 133              		.globl	_ZN6ThreadC2EPFvPvES0_m
+ 135              	_ZN6ThreadC2EPFvPvES0_m:
+ 136              	.LFB3:
+  12:src/Thread.cpp ****     : stack(nullptr), stackSize(stackSizeBytes), body(b), args(a), state(NEW), next(nullptr) {
+ 137              		.loc 1 12 1 is_stmt 1
+ 138              		.cfi_startproc
+ 139              	.LVL11:
+ 140 0090 130101FF 		addi	sp,sp,-16
+ 141              		.cfi_def_cfa_offset 16
+ 142 0094 23341100 		sd	ra,8(sp)
+GAS LISTING /tmp/cc478Req.s 			page 4
+
+
+ 143 0098 23308100 		sd	s0,0(sp)
+ 144              		.cfi_offset 1, -8
+ 145              		.cfi_offset 8, -16
+ 146 009c 13040101 		addi	s0,sp,16
+ 147              		.cfi_def_cfa 8, 0
+ 148              	.LBB4:
+  13:src/Thread.cpp ****     allocateStack(stackSizeBytes);
+ 149              		.loc 1 13 92 is_stmt 0
+ 150 00a0 23340500 		sd	zero,8(a0)
+ 151 00a4 2338D500 		sd	a3,16(a0)
+ 152 00a8 2334B502 		sd	a1,40(a0)
+ 153 00ac 2338C502 		sd	a2,48(a0)
+ 154 00b0 232C0502 		sw	zero,56(a0)
+ 155 00b4 23300504 		sd	zero,64(a0)
+  14:src/Thread.cpp **** }
+ 156              		.loc 1 14 5 is_stmt 1
+  14:src/Thread.cpp **** }
+ 157              		.loc 1 14 18 is_stmt 0
+ 158 00b8 93850600 		mv	a1,a3
+ 159              	.LVL12:
+ 160 00bc 97000000 		call	_ZN6Thread13allocateStackEm
+ 160      E7800000 
+ 161              	.LVL13:
+ 162              	.LBE4:
+  15:src/Thread.cpp **** 
+ 163              		.loc 1 15 1
+ 164 00c4 83308100 		ld	ra,8(sp)
+ 165              		.cfi_restore 1
+ 166 00c8 03340100 		ld	s0,0(sp)
+ 167              		.cfi_restore 8
+ 168              		.cfi_def_cfa 2, 16
+ 169 00cc 13010101 		addi	sp,sp,16
+ 170              		.cfi_def_cfa_offset 0
+ 171 00d0 67800000 		jr	ra
+ 172              		.cfi_endproc
+ 173              	.LFE3:
+ 175              		.globl	_ZN6ThreadC1EPFvPvES0_m
+ 176              		.set	_ZN6ThreadC1EPFvPvES0_m,_ZN6ThreadC2EPFvPvES0_m
+ 177              		.align	2
+ 178              		.globl	_ZN6Thread5startEv
+ 180              	_ZN6Thread5startEv:
+ 181              	.LFB9:
+  31:src/Thread.cpp **** 
+  32:src/Thread.cpp **** void Thread::start() {
+ 182              		.loc 1 32 22 is_stmt 1
+ 183              		.cfi_startproc
+ 184              	.LVL14:
+  33:src/Thread.cpp ****     if (state != NEW) return;
+ 185              		.loc 1 33 5
+ 186              		.loc 1 33 9 is_stmt 0
+ 187 00d4 83278503 		lw	a5,56(a0)
+ 188              		.loc 1 33 5
+ 189 00d8 63840700 		beqz	a5,.L18
+ 190 00dc 67800000 		ret
+ 191              	.L18:
+  32:src/Thread.cpp ****     if (state != NEW) return;
+ 192              		.loc 1 32 22
+GAS LISTING /tmp/cc478Req.s 			page 5
+
+
+ 193 00e0 130101FF 		addi	sp,sp,-16
+ 194              		.cfi_def_cfa_offset 16
+ 195 00e4 23341100 		sd	ra,8(sp)
+ 196 00e8 23308100 		sd	s0,0(sp)
+ 197              		.cfi_offset 1, -8
+ 198              		.cfi_offset 8, -16
+ 199 00ec 13040101 		addi	s0,sp,16
+ 200              		.cfi_def_cfa 8, 0
+  34:src/Thread.cpp **** 
+  35:src/Thread.cpp ****     //void* stackTop = (char*)stack + stackSize;
+  36:src/Thread.cpp ****     //initContext(&context, wrapper, stackTop);
+  37:src/Thread.cpp ****     state = READY;
+ 201              		.loc 1 37 5 is_stmt 1
+ 202              		.loc 1 37 11 is_stmt 0
+ 203 00f0 93071000 		li	a5,1
+ 204 00f4 232CF502 		sw	a5,56(a0)
+  38:src/Thread.cpp ****     Scheduler::put(this);
+ 205              		.loc 1 38 5 is_stmt 1
+ 206              		.loc 1 38 19 is_stmt 0
+ 207 00f8 97000000 		call	_ZN9Scheduler3putEP6Thread@plt
+ 207      E7800000 
+ 208              	.LVL15:
+  39:src/Thread.cpp **** }
+ 209              		.loc 1 39 1
+ 210 0100 83308100 		ld	ra,8(sp)
+ 211              		.cfi_restore 1
+ 212 0104 03340100 		ld	s0,0(sp)
+ 213              		.cfi_restore 8
+ 214              		.cfi_def_cfa 2, 16
+ 215 0108 13010101 		addi	sp,sp,16
+ 216              		.cfi_def_cfa_offset 0
+ 217 010c 67800000 		jr	ra
+ 218              		.cfi_endproc
+ 219              	.LFE9:
+ 221              		.align	2
+ 222              		.globl	_ZN6Thread4exitEv
+ 224              	_ZN6Thread4exitEv:
+ 225              	.LFB10:
+  40:src/Thread.cpp **** 
+  41:src/Thread.cpp **** void Thread::exit() {
+ 226              		.loc 1 41 21 is_stmt 1
+ 227              		.cfi_startproc
+ 228              	.LVL16:
+ 229 0110 130101FF 		addi	sp,sp,-16
+ 230              		.cfi_def_cfa_offset 16
+ 231 0114 23348100 		sd	s0,8(sp)
+ 232              		.cfi_offset 8, -8
+ 233 0118 13040101 		addi	s0,sp,16
+ 234              		.cfi_def_cfa 8, 0
+  42:src/Thread.cpp ****     state = FINISHED;
+ 235              		.loc 1 42 5
+ 236              		.loc 1 42 11 is_stmt 0
+ 237 011c 93074000 		li	a5,4
+ 238 0120 232CF502 		sw	a5,56(a0)
+  43:src/Thread.cpp **** }
+ 239              		.loc 1 43 1
+ 240 0124 03348100 		ld	s0,8(sp)
+GAS LISTING /tmp/cc478Req.s 			page 6
+
+
+ 241              		.cfi_restore 8
+ 242              		.cfi_def_cfa 2, 16
+ 243 0128 13010101 		addi	sp,sp,16
+ 244              		.cfi_def_cfa_offset 0
+ 245 012c 67800000 		jr	ra
+ 246              		.cfi_endproc
+ 247              	.LFE10:
+ 249              		.align	2
+ 250              		.globl	_ZN6Thread7wrapperEv
+ 252              	_ZN6Thread7wrapperEv:
+ 253              	.LFB11:
+  44:src/Thread.cpp **** 
+  45:src/Thread.cpp **** void Thread::wrapper() {
+ 254              		.loc 1 45 24 is_stmt 1
+ 255              		.cfi_startproc
+ 256 0130 130101FE 		addi	sp,sp,-32
+ 257              		.cfi_def_cfa_offset 32
+ 258 0134 233C1100 		sd	ra,24(sp)
+ 259 0138 23388100 		sd	s0,16(sp)
+ 260 013c 23349100 		sd	s1,8(sp)
+ 261              		.cfi_offset 1, -8
+ 262              		.cfi_offset 8, -16
+ 263              		.cfi_offset 9, -24
+ 264 0140 13040102 		addi	s0,sp,32
+ 265              		.cfi_def_cfa 8, 0
+  46:src/Thread.cpp ****     Thread* self = running;
+ 266              		.loc 1 46 5
+ 267              		.loc 1 46 13 is_stmt 0
+ 268 0144 97040000 		ld	s1,.LANCHOR0
+ 268      83B40400 
+ 269              	.LVL17:
+  47:src/Thread.cpp **** 
+  48:src/Thread.cpp ****     if (self && self->body) {
+ 270              		.loc 1 48 5 is_stmt 1
+ 271 014c 638A0400 		beqz	s1,.L22
+ 272              		.loc 1 48 23 is_stmt 0 discriminator 1
+ 273 0150 83B78402 		ld	a5,40(s1)
+ 274              		.loc 1 48 14 discriminator 1
+ 275 0154 63860700 		beqz	a5,.L22
+  49:src/Thread.cpp ****         self->body(self->args);
+ 276              		.loc 1 49 9 is_stmt 1
+ 277              		.loc 1 49 19 is_stmt 0
+ 278 0158 03B50403 		ld	a0,48(s1)
+ 279 015c E7800700 		jalr	a5
+ 280              	.LVL18:
+ 281              	.L22:
+  50:src/Thread.cpp ****     }
+  51:src/Thread.cpp **** 
+  52:src/Thread.cpp ****     if (self) self->exit();
+ 282              		.loc 1 52 5 is_stmt 1
+ 283 0160 63880400 		beqz	s1,.L23
+ 284              		.loc 1 52 15 discriminator 1
+ 285              		.loc 1 52 25 is_stmt 0 discriminator 1
+ 286 0164 13850400 		mv	a0,s1
+ 287 0168 97000000 		call	_ZN6Thread4exitEv
+ 287      E7800000 
+ 288              	.LVL19:
+GAS LISTING /tmp/cc478Req.s 			page 7
+
+
+ 289              	.L23:
+  53:src/Thread.cpp **** 
+  54:src/Thread.cpp ****     while (1);
+ 290              		.loc 1 54 5 is_stmt 1 discriminator 1
+ 291              		.loc 1 54 5 discriminator 1
+ 292 0170 6F000000 		j	.L23
+ 293              		.cfi_endproc
+ 294              	.LFE11:
+ 296              		.globl	_ZN6Thread7runningE
+ 297              		.bss
+ 298              		.align	3
+ 299              		.set	.LANCHOR0,. + 0
+ 302              	_ZN6Thread7runningE:
+ 303 0000 00000000 		.zero	8
+ 303      00000000 
+ 304              		.text
+ 305              	.Letext0:
+ 306              		.file 2 "src/../h/../lib/hw.h"
+ 307              		.file 3 "src/../h/Thread.hpp"
+ 308              		.file 4 "src/../h/Scheduler.hpp"
+ 309              		.file 5 "src/../h/MemoryAllocator.hpp"
+ 2283              		.align	3
+ 2286              	DW.ref.__gxx_personality_v0:
+ 2287 0000 00000000 		.dword	__gxx_personality_v0
+ 2287      00000000 
+ 2288              		.ident	"GCC: (Ubuntu 9.4.0-1ubuntu1~20.04) 9.4.0"
+ 2289              		.section	.note.GNU-stack,"",@progbits
+GAS LISTING /tmp/cc478Req.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Thread.cpp
+     /tmp/cc478Req.s:9      .text:0000000000000000 _ZN6ThreadD2Ev
+     /tmp/cc478Req.s:13     .text:0000000000000000 .L0 
+     /tmp/cc478Req.s:2286   .data.rel.local.DW.ref.__gxx_personality_v0:0000000000000000 DW.ref.__gxx_personality_v0
+     /tmp/cc478Req.s:18     .text:0000000000000000 .L0 
+     /tmp/cc478Req.s:19     .text:0000000000000000 .L0 
+     /tmp/cc478Req.s:20     .text:0000000000000000 .L0 
+     /tmp/cc478Req.s:23     .text:0000000000000004 .L0 
+     /tmp/cc478Req.s:26     .text:0000000000000008 .L0 
+     /tmp/cc478Req.s:27     .text:000000000000000c .L0 
+     /tmp/cc478Req.s:30     .text:0000000000000014 .L0 
+     /tmp/cc478Req.s:31     .text:0000000000000014 .L0 
+     /tmp/cc478Req.s:33     .text:0000000000000018 .L0 
+     /tmp/cc478Req.s:36     .text:0000000000000018 .L0 
+     /tmp/cc478Req.s:37     .text:0000000000000018 .L0 
+     /tmp/cc478Req.s:41     .text:0000000000000020 .L0 
+     /tmp/cc478Req.s:42     .text:0000000000000020 .L0 
+     /tmp/cc478Req.s:43     .text:0000000000000024 .L0 
+     /tmp/cc478Req.s:45     .text:0000000000000028 .L0 
+     /tmp/cc478Req.s:46     .text:0000000000000028 .L0 
+     /tmp/cc478Req.s:48     .text:000000000000002c .L0 
+     /tmp/cc478Req.s:52     .text:0000000000000034 .L0 
+     /tmp/cc478Req.s:9      .text:0000000000000000 _ZN6ThreadD1Ev
+     /tmp/cc478Req.s:68     .text:0000000000000034 _ZN6Thread13allocateStackEm
+     /tmp/cc478Req.s:71     .text:0000000000000034 .L0 
+     /tmp/cc478Req.s:73     .text:0000000000000034 .L0 
+     /tmp/cc478Req.s:74     .text:0000000000000038 .L0 
+     /tmp/cc478Req.s:79     .text:0000000000000048 .L0 
+     /tmp/cc478Req.s:80     .text:0000000000000048 .L0 
+     /tmp/cc478Req.s:81     .text:0000000000000048 .L0 
+     /tmp/cc478Req.s:82     .text:0000000000000048 .L0 
+     /tmp/cc478Req.s:84     .text:000000000000004c .L0 
+     /tmp/cc478Req.s:87     .text:0000000000000050 .L0 
+     /tmp/cc478Req.s:88     .text:0000000000000050 .L0 
+     /tmp/cc478Req.s:91     .text:0000000000000054 .L0 
+     /tmp/cc478Req.s:92     .text:0000000000000054 .L0 
+     /tmp/cc478Req.s:95     .text:0000000000000058 .L0 
+     /tmp/cc478Req.s:97     .text:000000000000005c .L0 
+     /tmp/cc478Req.s:98     .text:000000000000005c .L0 
+     /tmp/cc478Req.s:102    .text:0000000000000060 .L0 
+     /tmp/cc478Req.s:103    .text:0000000000000060 .L0 
+     /tmp/cc478Req.s:108    .text:000000000000006c .L0 
+     /tmp/cc478Req.s:110    .text:0000000000000070 .L0 
+     /tmp/cc478Req.s:111    .text:0000000000000070 .L0 
+     /tmp/cc478Req.s:114    .text:0000000000000074 .L0 
+     /tmp/cc478Req.s:116    .text:0000000000000078 .L0 
+     /tmp/cc478Req.s:117    .text:000000000000007c .L0 
+     /tmp/cc478Req.s:119    .text:0000000000000080 .L0 
+     /tmp/cc478Req.s:120    .text:0000000000000080 .L0 
+     /tmp/cc478Req.s:122    .text:0000000000000084 .L0 
+     /tmp/cc478Req.s:124    .text:0000000000000088 .L0 
+     /tmp/cc478Req.s:127    .text:000000000000008c .L0 
+     /tmp/cc478Req.s:129    .text:0000000000000090 .L0 
+     /tmp/cc478Req.s:135    .text:0000000000000090 _ZN6ThreadC2EPFvPvES0_m
+     /tmp/cc478Req.s:138    .text:0000000000000090 .L0 
+     /tmp/cc478Req.s:140    .text:0000000000000090 .L0 
+GAS LISTING /tmp/cc478Req.s 			page 9
+
+
+     /tmp/cc478Req.s:141    .text:0000000000000094 .L0 
+     /tmp/cc478Req.s:144    .text:000000000000009c .L0 
+     /tmp/cc478Req.s:145    .text:000000000000009c .L0 
+     /tmp/cc478Req.s:147    .text:00000000000000a0 .L0 
+     /tmp/cc478Req.s:150    .text:00000000000000a0 .L0 
+     /tmp/cc478Req.s:157    .text:00000000000000b8 .L0 
+     /tmp/cc478Req.s:158    .text:00000000000000b8 .L0 
+     /tmp/cc478Req.s:164    .text:00000000000000c4 .L0 
+     /tmp/cc478Req.s:165    .text:00000000000000c8 .L0 
+     /tmp/cc478Req.s:167    .text:00000000000000cc .L0 
+     /tmp/cc478Req.s:168    .text:00000000000000cc .L0 
+     /tmp/cc478Req.s:170    .text:00000000000000d0 .L0 
+     /tmp/cc478Req.s:172    .text:00000000000000d4 .L0 
+     /tmp/cc478Req.s:135    .text:0000000000000090 _ZN6ThreadC1EPFvPvES0_m
+     /tmp/cc478Req.s:180    .text:00000000000000d4 _ZN6Thread5startEv
+     /tmp/cc478Req.s:183    .text:00000000000000d4 .L0 
+     /tmp/cc478Req.s:185    .text:00000000000000d4 .L0 
+     /tmp/cc478Req.s:186    .text:00000000000000d4 .L0 
+     /tmp/cc478Req.s:187    .text:00000000000000d4 .L0 
+     /tmp/cc478Req.s:189    .text:00000000000000d8 .L0 
+     /tmp/cc478Req.s:193    .text:00000000000000e0 .L0 
+     /tmp/cc478Req.s:194    .text:00000000000000e4 .L0 
+     /tmp/cc478Req.s:197    .text:00000000000000ec .L0 
+     /tmp/cc478Req.s:198    .text:00000000000000ec .L0 
+     /tmp/cc478Req.s:200    .text:00000000000000f0 .L0 
+     /tmp/cc478Req.s:202    .text:00000000000000f0 .L0 
+     /tmp/cc478Req.s:203    .text:00000000000000f0 .L0 
+     /tmp/cc478Req.s:206    .text:00000000000000f8 .L0 
+     /tmp/cc478Req.s:207    .text:00000000000000f8 .L0 
+     /tmp/cc478Req.s:210    .text:0000000000000100 .L0 
+     /tmp/cc478Req.s:211    .text:0000000000000104 .L0 
+     /tmp/cc478Req.s:213    .text:0000000000000108 .L0 
+     /tmp/cc478Req.s:214    .text:0000000000000108 .L0 
+     /tmp/cc478Req.s:216    .text:000000000000010c .L0 
+     /tmp/cc478Req.s:218    .text:0000000000000110 .L0 
+     /tmp/cc478Req.s:224    .text:0000000000000110 _ZN6Thread4exitEv
+     /tmp/cc478Req.s:227    .text:0000000000000110 .L0 
+     /tmp/cc478Req.s:229    .text:0000000000000110 .L0 
+     /tmp/cc478Req.s:230    .text:0000000000000114 .L0 
+     /tmp/cc478Req.s:232    .text:0000000000000118 .L0 
+     /tmp/cc478Req.s:234    .text:000000000000011c .L0 
+     /tmp/cc478Req.s:236    .text:000000000000011c .L0 
+     /tmp/cc478Req.s:237    .text:000000000000011c .L0 
+     /tmp/cc478Req.s:240    .text:0000000000000124 .L0 
+     /tmp/cc478Req.s:241    .text:0000000000000128 .L0 
+     /tmp/cc478Req.s:242    .text:0000000000000128 .L0 
+     /tmp/cc478Req.s:244    .text:000000000000012c .L0 
+     /tmp/cc478Req.s:246    .text:0000000000000130 .L0 
+     /tmp/cc478Req.s:252    .text:0000000000000130 _ZN6Thread7wrapperEv
+     /tmp/cc478Req.s:255    .text:0000000000000130 .L0 
+     /tmp/cc478Req.s:256    .text:0000000000000130 .L0 
+     /tmp/cc478Req.s:257    .text:0000000000000134 .L0 
+     /tmp/cc478Req.s:261    .text:0000000000000140 .L0 
+     /tmp/cc478Req.s:262    .text:0000000000000140 .L0 
+     /tmp/cc478Req.s:263    .text:0000000000000140 .L0 
+     /tmp/cc478Req.s:265    .text:0000000000000144 .L0 
+     /tmp/cc478Req.s:267    .text:0000000000000144 .L0 
+GAS LISTING /tmp/cc478Req.s 			page 10
+
+
+     /tmp/cc478Req.s:268    .text:0000000000000144 .L0 
+     /tmp/cc478Req.s:271    .text:000000000000014c .L0 
+     /tmp/cc478Req.s:273    .text:0000000000000150 .L0 
+     /tmp/cc478Req.s:275    .text:0000000000000154 .L0 
+     /tmp/cc478Req.s:277    .text:0000000000000158 .L0 
+     /tmp/cc478Req.s:278    .text:0000000000000158 .L0 
+     /tmp/cc478Req.s:283    .text:0000000000000160 .L0 
+     /tmp/cc478Req.s:285    .text:0000000000000164 .L0 
+     /tmp/cc478Req.s:286    .text:0000000000000164 .L0 
+     /tmp/cc478Req.s:291    .text:0000000000000170 .L0 
+     /tmp/cc478Req.s:292    .text:0000000000000170 .L0 
+     /tmp/cc478Req.s:293    .text:0000000000000174 .L0 
+     /tmp/cc478Req.s:302    .bss:0000000000000000 _ZN6Thread7runningE
+     /tmp/cc478Req.s:299    .bss:0000000000000000 .LANCHOR0
+     /tmp/cc478Req.s:310    .text:0000000000000174 .L0 
+     /tmp/cc478Req.s:268    .text:0000000000000144 .L0 
+     /tmp/cc478Req.s:50     .text:0000000000000030 .L4
+     /tmp/cc478Req.s:100    .text:0000000000000060 .L8
+     /tmp/cc478Req.s:191    .text:00000000000000e0 .L18
+     /tmp/cc478Req.s:281    .text:0000000000000160 .L22
+     /tmp/cc478Req.s:289    .text:0000000000000170 .L23
+     /tmp/cc478Req.s:1112   .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+     /tmp/cc478Req.s:2254   .debug_str:000000000000047b .LASF76
+     /tmp/cc478Req.s:2246   .debug_str:0000000000000450 .LASF77
+     /tmp/cc478Req.s:2134   .debug_str:00000000000000fe .LASF78
+     /tmp/cc478Req.s:5      .text:0000000000000000 .Ltext0
+     /tmp/cc478Req.s:305    .text:0000000000000174 .Letext0
+     /tmp/cc478Req.s:2094   .debug_line:0000000000000000 .Ldebug_line0
+     /tmp/cc478Req.s:2194   .debug_str:0000000000000305 .LASF0
+     /tmp/cc478Req.s:2210   .debug_str:0000000000000362 .LASF1
+     /tmp/cc478Req.s:2178   .debug_str:0000000000000277 .LASF2
+     /tmp/cc478Req.s:2160   .debug_str:000000000000020e .LASF4
+     /tmp/cc478Req.s:2240   .debug_str:000000000000042b .LASF3
+     /tmp/cc478Req.s:2106   .debug_str:0000000000000036 .LASF5
+     /tmp/cc478Req.s:2214   .debug_str:0000000000000395 .LASF6
+     /tmp/cc478Req.s:2192   .debug_str:00000000000002f2 .LASF7
+     /tmp/cc478Req.s:2264   .debug_str:000000000000058a .LASF8
+     /tmp/cc478Req.s:2146   .debug_str:000000000000018b .LASF9
+     /tmp/cc478Req.s:2224   .debug_str:00000000000003db .LASF10
+     /tmp/cc478Req.s:2256   .debug_str:000000000000053f .LASF11
+     /tmp/cc478Req.s:2108   .debug_str:000000000000003d .LASF12
+     /tmp/cc478Req.s:2098   .debug_str:0000000000000006 .LASF13
+     /tmp/cc478Req.s:2112   .debug_str:0000000000000059 .LASF14
+     /tmp/cc478Req.s:2234   .debug_str:0000000000000407 .LASF15
+     /tmp/cc478Req.s:2120   .debug_str:00000000000000a5 .LASF16
+     /tmp/cc478Req.s:2152   .debug_str:00000000000001b8 .LASF79
+     /tmp/cc478Req.s:2222   .debug_str:00000000000003d5 .LASF17
+     /tmp/cc478Req.s:2218   .debug_str:00000000000003c3 .LASF18
+     /tmp/cc478Req.s:2162   .debug_str:0000000000000215 .LASF19
+     /tmp/cc478Req.s:2244   .debug_str:0000000000000447 .LASF20
+     /tmp/cc478Req.s:2262   .debug_str:0000000000000583 .LASF21
+     /tmp/cc478Req.s:2100   .debug_str:0000000000000016 .LASF50
+     /tmp/cc478Req.s:2180   .debug_str:0000000000000285 .LASF23
+     /tmp/cc478Req.s:2232   .debug_str:0000000000000402 .LASF80
+     /tmp/cc478Req.s:2238   .debug_str:0000000000000423 .LASF22
+     /tmp/cc478Req.s:2204   .debug_str:000000000000033e .LASF24
+     /tmp/cc478Req.s:2208   .debug_str:000000000000035c .LASF25
+GAS LISTING /tmp/cc478Req.s 			page 11
+
+
+     /tmp/cc478Req.s:2142   .debug_str:0000000000000157 .LASF26
+     /tmp/cc478Req.s:2174   .debug_str:000000000000026d .LASF27
+     /tmp/cc478Req.s:2104   .debug_str:0000000000000024 .LASF28
+     /tmp/cc478Req.s:2248   .debug_str:000000000000045f .LASF31
+     /tmp/cc478Req.s:2154   .debug_str:00000000000001c4 .LASF33
+     /tmp/cc478Req.s:2170   .debug_str:0000000000000242 .LASF81
+     /tmp/cc478Req.s:2140   .debug_str:0000000000000140 .LASF82
+     /tmp/cc478Req.s:2182   .debug_str:000000000000029d .LASF29
+     /tmp/cc478Req.s:2172   .debug_str:000000000000024b .LASF30
+     /tmp/cc478Req.s:2130   .debug_str:00000000000000f1 .LASF65
+     /tmp/cc478Req.s:2236   .debug_str:000000000000041d .LASF32
+     /tmp/cc478Req.s:2148   .debug_str:0000000000000199 .LASF34
+     /tmp/cc478Req.s:2196   .debug_str:0000000000000312 .LASF35
+     /tmp/cc478Req.s:2138   .debug_str:000000000000012a .LASF36
+     /tmp/cc478Req.s:2198   .debug_str:000000000000031b .LASF37
+     /tmp/cc478Req.s:2270   .debug_str:00000000000005c9 .LASF38
+     /tmp/cc478Req.s:2168   .debug_str:000000000000023a .LASF39
+     /tmp/cc478Req.s:2166   .debug_str:0000000000000235 .LASF40
+     /tmp/cc478Req.s:2200   .debug_str:0000000000000321 .LASF41
+     /tmp/cc478Req.s:2102   .debug_str:000000000000001e .LASF42
+     /tmp/cc478Req.s:2276   .debug_str:0000000000000613 .LASF43
+     /tmp/cc478Req.s:2136   .debug_str:000000000000011c .LASF45
+     /tmp/cc478Req.s:2190   .debug_str:00000000000002d6 .LASF83
+     /tmp/cc478Req.s:2268   .debug_str:00000000000005bb .LASF84
+     /tmp/cc478Req.s:2156   .debug_str:00000000000001d9 .LASF85
+     /tmp/cc478Req.s:2150   .debug_str:00000000000001ac .LASF67
+     /tmp/cc478Req.s:2274   .debug_str:00000000000005e6 .LASF69
+     /tmp/cc478Req.s:2220   .debug_str:00000000000003cb .LASF44
+     /tmp/cc478Req.s:2128   .debug_str:00000000000000dd .LASF86
+     /tmp/cc478Req.s:2188   .debug_str:00000000000002bb .LASF87
+     /tmp/cc478Req.s:2118   .debug_str:000000000000009d .LASF46
+     /tmp/cc478Req.s:2202   .debug_str:0000000000000326 .LASF61
+     /tmp/cc478Req.s:2124   .debug_str:00000000000000c4 .LASF47
+     /tmp/cc478Req.s:2176   .debug_str:0000000000000272 .LASF48
+     /tmp/cc478Req.s:2132   .debug_str:00000000000000f9 .LASF49
+     /tmp/cc478Req.s:2110   .debug_str:000000000000004d .LASF51
+     /tmp/cc478Req.s:2250   .debug_str:0000000000000467 .LASF52
+     /tmp/cc478Req.s:2186   .debug_str:00000000000002ab .LASF53
+     /tmp/cc478Req.s:2122   .debug_str:00000000000000bb .LASF54
+     /tmp/cc478Req.s:2212   .debug_str:0000000000000375 .LASF55
+     /tmp/cc478Req.s:2242   .debug_str:000000000000043d .LASF56
+     /tmp/cc478Req.s:2266   .debug_str:000000000000059a .LASF57
+     /tmp/cc478Req.s:2228   .debug_str:00000000000003f4 .LASF58
+     /tmp/cc478Req.s:2144   .debug_str:000000000000016a .LASF59
+     /tmp/cc478Req.s:2272   .debug_str:00000000000005d3 .LASF60
+     /tmp/cc478Req.s:2116   .debug_str:0000000000000072 .LASF62
+     /tmp/cc478Req.s:2216   .debug_str:00000000000003a8 .LASF63
+     /tmp/cc478Req.s:2278   .debug_str:0000000000000618 .LASF64
+     /tmp/cc478Req.s:2114   .debug_str:0000000000000065 .LASF66
+     /tmp/cc478Req.s:2158   .debug_str:0000000000000204 .LASF68
+     /tmp/cc478Req.s:2258   .debug_str:000000000000054e .LASF70
+     /tmp/cc478Req.s:2126   .debug_str:00000000000000c9 .LASF88
+     /tmp/cc478Req.s:253    .text:0000000000000130 .LFB11
+     /tmp/cc478Req.s:294    .text:0000000000000174 .LFE11
+     /tmp/cc478Req.s:2184   .debug_str:00000000000002a6 .LASF71
+     /tmp/cc478Req.s:288    .text:0000000000000170 .LVL19
+     /tmp/cc478Req.s:225    .text:0000000000000110 .LFB10
+GAS LISTING /tmp/cc478Req.s 			page 12
+
+
+     /tmp/cc478Req.s:247    .text:0000000000000130 .LFE10
+     /tmp/cc478Req.s:2230   .debug_str:00000000000003fd .LASF72
+     /tmp/cc478Req.s:181    .text:00000000000000d4 .LFB9
+     /tmp/cc478Req.s:219    .text:0000000000000110 .LFE9
+     /tmp/cc478Req.s:1953   .debug_loc:0000000000000000 .LLST8
+     /tmp/cc478Req.s:208    .text:0000000000000100 .LVL15
+     /tmp/cc478Req.s:69     .text:0000000000000034 .LFB8
+     /tmp/cc478Req.s:130    .text:0000000000000090 .LFE8
+     /tmp/cc478Req.s:1967   .debug_loc:0000000000000039 .LLST1
+     /tmp/cc478Req.s:2096   .debug_str:0000000000000000 .LASF89
+     /tmp/cc478Req.s:1985   .debug_loc:0000000000000085 .LLST2
+     /tmp/cc478Req.s:2260   .debug_str:000000000000057c .LASF73
+     /tmp/cc478Req.s:1999   .debug_loc:00000000000000be .LLST3
+     /tmp/cc478Req.s:106    .text:000000000000006c .LVL8
+     /tmp/cc478Req.s:2226   .debug_str:00000000000003ea .LASF74
+     /tmp/cc478Req.s:2252   .debug_str:000000000000046c .LASF90
+     /tmp/cc478Req.s:10     .text:0000000000000000 .LFB6
+     /tmp/cc478Req.s:53     .text:0000000000000034 .LFE6
+     /tmp/cc478Req.s:2006   .debug_loc:00000000000000e1 .LLST0
+     /tmp/cc478Req.s:38     .text:0000000000000020 .LVL2
+     /tmp/cc478Req.s:2206   .debug_str:000000000000034d .LASF75
+     /tmp/cc478Req.s:2164   .debug_str:000000000000021d .LASF91
+     /tmp/cc478Req.s:136    .text:0000000000000090 .LFB3
+     /tmp/cc478Req.s:173    .text:00000000000000d4 .LFE3
+     /tmp/cc478Req.s:2020   .debug_loc:000000000000011a .LLST4
+     /tmp/cc478Req.s:2034   .debug_loc:0000000000000153 .LLST5
+     /tmp/cc478Req.s:2053   .debug_loc:00000000000001a0 .LLST6
+     /tmp/cc478Req.s:2067   .debug_loc:00000000000001d9 .LLST7
+     /tmp/cc478Req.s:161    .text:00000000000000c4 .LVL13
+     /tmp/cc478Req.s:184    .text:00000000000000d4 .LVL14
+     /tmp/cc478Req.s:72     .text:0000000000000034 .LVL3
+     /tmp/cc478Req.s:104    .text:0000000000000064 .LVL7
+     /tmp/cc478Req.s:125    .text:0000000000000088 .LVL10
+     /tmp/cc478Req.s:93     .text:0000000000000058 .LVL5
+     /tmp/cc478Req.s:89     .text:0000000000000054 .LVL4
+     /tmp/cc478Req.s:112    .text:0000000000000074 .LVL9
+     /tmp/cc478Req.s:16     .text:0000000000000000 .LVL0
+     /tmp/cc478Req.s:21     .text:0000000000000004 .LVL1
+     /tmp/cc478Req.s:139    .text:0000000000000090 .LVL11
+     /tmp/cc478Req.s:159    .text:00000000000000bc .LVL12
+     /tmp/cc478Req.s:311    .debug_info:0000000000000000 .Ldebug_info0
+     /tmp/cc478Req.s:56     .gcc_except_table:0000000000000000 .LLSDA6
+
+UNDEFINED SYMBOLS
+_ZN15MemoryAllocator8mem_freeEPv
+__gxx_personality_v0
+_ZN15MemoryAllocator9mem_allocEm
+_ZN9Scheduler3putEP6Thread

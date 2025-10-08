@@ -43,7 +43,7 @@ void* MemoryAllocator::mem_alloc(size_t blocks) {
         else freeListHead = curr->next;
     }
 
-    return (void*)((char*)curr + sizeof(BlockHeader));
+    return (char*)curr + sizeof(BlockHeader);
 }
 
 int MemoryAllocator::mem_free(void* addr) {

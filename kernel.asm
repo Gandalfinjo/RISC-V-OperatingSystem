@@ -426,7 +426,7 @@ void* MemoryAllocator::mem_alloc(size_t blocks) {
         else freeListHead = curr->next;
     }
 
-    return (void*)((char*)curr + sizeof(BlockHeader));
+    return (char*)curr + sizeof(BlockHeader);
     800013ac:	01050513          	addi	a0,a0,16
 }
     800013b0:	00813403          	ld	s0,8(sp)
@@ -734,6 +734,7 @@ void printPointer(void* ptr) {
     800016b0:	00008067          	ret
 
 00000000800016b4 <_Z8userMainv>:
+
 void userMain() {
     800016b4:	fe010113          	addi	sp,sp,-32
     800016b8:	00113c23          	sd	ra,24(sp)

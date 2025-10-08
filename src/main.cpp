@@ -7,25 +7,30 @@ extern void userMain();
 extern void printString(const char* s);
 
 void threadBody(void* arg) {
-    printString("Hello from thread body!\n");
+    for (int i = 0; i < 5; i++) {
+        printString("Thread running\n");
+        // Thread::yield();
+    }
 }
 
 void main() {
     MemoryAllocator::initHeap();
     Riscv::setupTrapHandler();
 
-    Thread t1(threadBody, nullptr);
-    t1.start();
+    Thread* mainThread = new Thread(nullptr, nullptr);
+    Thread::running = mainThread;
+    mainThread->setState(RUNNING);
 
-    if (!Scheduler::isEmpty()) {
-        Thread* next = Scheduler::get();
-        if (next == &t1) {
-            printString("Scheduler working OK\n");
-        }
-        else {
-            printString("Scheduler empty\n");
-        }
+    Thread* t1 = new Thread(threadBody, nullptr);
+    Thread* t2 = new Thread(threadBody, nullptr);
+    t1->start();
+    t2->start();
+
+    while (!Scheduler::isEmpty()) {
+        Thread::yield();
     }
+
+    printString("All threads done!\n");
 
     userMain();
 }

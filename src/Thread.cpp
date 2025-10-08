@@ -9,8 +9,10 @@
 
 Thread* Thread::running = nullptr;
 
+int Thread::staticId = 0;
+
 Thread::Thread(Body b, void* a, size_t stackSizeBytes)
-    : stack(nullptr), stackSize(stackSizeBytes), body(b), args(a), state(NEW), next(nullptr) {
+    : id(staticId++), stack(nullptr), stackSize(stackSizeBytes), body(b), args(a), state(NEW), next(nullptr) {
     allocateStack(stackSizeBytes);
 }
 
@@ -32,8 +34,8 @@ void Thread::allocateStack(size_t bytes) {
 void Thread::start() {
     if (state != NEW) return;
 
-    //void* stackTop = (char*)stack + stackSize;
-    //initContext(&context, wrapper, stackTop);
+    void* stackTop = (char*)stack + stackSize;
+    initContext(&context, wrapper, stackTop);
     state = READY;
     Scheduler::put(this);
 }
@@ -43,13 +45,28 @@ void Thread::exit() {
 }
 
 void Thread::wrapper() {
-    Thread* self = running;
+    running->body(running->args);
+    running->exit();
+    yield();
+}
 
-    if (self && self->body) {
-        self->body(self->args);
+void Thread::dispatch() {
+    Thread* old = running;
+
+    if (old && old->state != FINISHED) {
+        old->state = READY;
+        Scheduler::put(old);
     }
 
-    if (self) self->exit();
+    Thread* next = Scheduler::get();
+    if (!next) return;
 
-    while (1);
+    next->state = RUNNING;
+    running = next;
+
+    contextSwitch(&old->context, &next->context);
+}
+
+void Thread::yield() {
+    dispatch();
 }

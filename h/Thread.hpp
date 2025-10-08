@@ -17,6 +17,8 @@ enum ThreadState {
 
 class Thread {
 public:
+    static int staticId;
+
     friend class Scheduler;
 
     using Body = void(*)(void*);
@@ -52,8 +54,8 @@ private:
     Thread* next;
 
     void allocateStack(size_t bytes);   // Helper: make byte size in blocks and allocate
-    static void contextSwitch(Context* oldCtx, Context* newCtx);
-    static void initContext(Context* ctx, void (*entry)(), void* stackTop);
+    static void contextSwitch(Context* oldContext, Context* newContext);
+    static void initContext(Context* context, void (*entry)(), void* stackTop);
 };
 
 #endif //PROJECT_BASE_THREAD_HPP

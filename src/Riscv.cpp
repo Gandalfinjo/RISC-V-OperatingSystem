@@ -5,12 +5,17 @@
 #include "../h/Riscv.hpp"
 
 #include "../h/MemoryAllocator.hpp"
+#include "../h/Thread.hpp"
 #include "../lib/hw.h"
 
 constexpr uint64 MEM_ALLOC = 0x01;
 constexpr uint64 MEM_FREE = 0x02;
 constexpr uint64 MEM_GET_FREE_SPACE = 0x03;
 constexpr uint64 MEM_GET_LARGEST_FREE_BLOCK = 0x04;
+
+constexpr uint64 THREAD_CREATE = 0x11;
+constexpr uint64 THREAD_EXIT = 0x12;
+constexpr uint64 THREAD_DISPATCH = 0x13;
 
 void Riscv::setupTrapHandler() {
     unsigned long addr = (unsigned long)&trap_handler;
@@ -52,6 +57,47 @@ void Riscv::trapHandler() {
             case MEM_GET_LARGEST_FREE_BLOCK: {
                 size_t largest = MemoryAllocator::mem_get_largest_free_block();
                 asm volatile("mv a0, %0" :: "r"(largest));
+                break;
+            }
+            case THREAD_CREATE: {
+                Thread** handle = nullptr;
+                void (*start_routine)(void*) = nullptr;
+                void* args = nullptr;
+                void* stackTop = nullptr;
+
+                asm volatile("mv %0, a1" : "=r"(handle));
+                asm volatile("mv %0, a2" : "=r"(start_routine));
+                asm volatile("mv %0, a3" : "=r"(args));
+                asm volatile("mv %0, a4" : "=r"(stackTop));
+
+                size_t stackSize = DEFAULT_STACK_SIZE;
+                //void* stackBase = (char*)stackTop - stackSize;
+
+                *handle = Thread::createThread(start_routine, args, stackTop, stackSize);
+                // *handle = Thread::createThread(start_routine, args);
+
+                if (*handle != nullptr) {
+                    (*handle)->start();
+                    asm volatile("li a0, 0");
+                }
+                else asm volatile("li a0, -1");
+
+                break;
+            }
+            case THREAD_EXIT: {
+                if (Thread::running) {
+                    Thread::running->exit();
+                }
+
+                Thread::dispatch();
+
+                asm volatile("li a0, 0");
+
+                break;
+            }
+            case THREAD_DISPATCH: {
+                Thread::dispatch();
+
                 break;
             }
             default:

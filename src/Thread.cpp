@@ -16,11 +16,25 @@ Thread::Thread(Body b, void* a, size_t stackSizeBytes)
     allocateStack(stackSizeBytes);
 }
 
+Thread::Thread(Body b, void* a, void* externalStackBase, size_t externalStackSize)
+    : id(staticId++), stack(nullptr), stackSize(0), body(b), args(a), state(NEW), next(nullptr) {
+    stack = externalStackBase;
+    stackSize = externalStackSize;
+}
+
 Thread::~Thread() {
     if (stack) {
         MemoryAllocator::mem_free(stack);
         stack = nullptr;
     }
+}
+
+Thread* Thread::createThread(Body b, void* a, size_t stackSizeBytes) {
+    return new Thread(b, a, stackSizeBytes);
+}
+
+Thread* Thread::createThread(Body b, void* a, void* externalStackBase, size_t externalStackSize) {
+    return new Thread(b, a, externalStackBase, externalStackSize);
 }
 
 void Thread::allocateStack(size_t bytes) {

@@ -42,3 +42,42 @@ size_t mem_get_largest_free_block() {
     asm volatile("mv %0, a0" : "=r"(result));
     return result;
 }
+
+int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg) {
+    if (!handle || !start_routine) return -1;
+
+    size_t stackBytes = DEFAULT_STACK_SIZE;
+    void* stack = mem_alloc(stackBytes);
+    if (!stack) return -1;
+
+    // void* stackTop = (char*)stack + stackBytes;
+
+    int result;
+
+    asm volatile("mv a1, %0" :: "r"(handle));
+    asm volatile("mv a2, %0" :: "r"(start_routine));
+    asm volatile("mv a3, %0" :: "r"(arg));
+    asm volatile("mv a4, %0" :: "r"(stack));
+    asm volatile("li a0, 0x11");
+    asm volatile("ecall");
+    asm volatile("mv %0, a0" : "=r"(result));
+
+    if (result < 0) {
+        mem_free(stack);
+    }
+
+    return result;
+}
+
+int thread_exit() {
+    int result;
+    asm volatile("li a0, 0x12");
+    asm volatile("ecall");
+    asm volatile("mv %0, a0" : "=r"(result));
+    return result;
+}
+
+void thread_dispatch() {
+    asm volatile("li a0, 0x13");
+    asm volatile("ecall");
+}

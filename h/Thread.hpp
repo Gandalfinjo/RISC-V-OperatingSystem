@@ -5,6 +5,7 @@
 #ifndef PROJECT_BASE_THREAD_HPP
 #define PROJECT_BASE_THREAD_HPP
 
+#include "MemoryAllocator.hpp"
 #include "../lib/hw.h"
 
 enum ThreadState {
@@ -18,13 +19,18 @@ enum ThreadState {
 class Thread {
 public:
     static int staticId;
+    static Thread* running;
 
     friend class Scheduler;
 
     using Body = void(*)(void*);
 
     Thread(Body, void*, size_t stackSizeBytes = DEFAULT_STACK_SIZE);
+    Thread(Body, void*, void*, size_t);
     ~Thread();
+
+    static Thread* createThread(Body, void*, size_t stackSizeBytes = DEFAULT_STACK_SIZE);
+    static Thread* createThread(Body, void*, void*, size_t);
 
     void start();                       // prepare and put in the Scheduler
     void exit();                        // mark as finished (could be called from wrapper)
@@ -33,10 +39,31 @@ public:
     ThreadState getState() const { return state; }
     void setState(ThreadState s) { state = s; }
 
-    static Thread* running;
-
     static void yield();
     static void dispatch();
+
+    void* operator new(size_t size) {
+        size_t blocks = size / MEM_BLOCK_SIZE;
+        if (size % MEM_BLOCK_SIZE) blocks++;
+
+        return MemoryAllocator::mem_alloc(blocks);
+    }
+
+    void operator delete(void* ptr) {
+        MemoryAllocator::mem_free(ptr);
+    }
+
+    void* operator new[](size_t size) {
+        size_t blocks = size / MEM_BLOCK_SIZE;
+        if (size % MEM_BLOCK_SIZE) blocks++;
+
+        return MemoryAllocator::mem_alloc(blocks);
+    }
+
+    void operator delete[](void* ptr) {
+        MemoryAllocator::mem_free(ptr);
+    }
+
 private:
     struct Context {
         size_t ra;

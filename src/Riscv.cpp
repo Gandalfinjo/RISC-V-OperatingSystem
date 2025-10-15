@@ -6,6 +6,7 @@
 
 #include "../h/MemoryAllocator.hpp"
 #include "../h/Thread.hpp"
+#include "../h/Semaphore.hpp"
 #include "../lib/hw.h"
 
 constexpr uint64 MEM_ALLOC = 0x01;
@@ -16,6 +17,11 @@ constexpr uint64 MEM_GET_LARGEST_FREE_BLOCK = 0x04;
 constexpr uint64 THREAD_CREATE = 0x11;
 constexpr uint64 THREAD_EXIT = 0x12;
 constexpr uint64 THREAD_DISPATCH = 0x13;
+
+constexpr uint64 SEM_OPEN = 0x21;
+constexpr uint64 SEM_CLOSE = 0x22;
+constexpr uint64 SEM_WAIT = 0x23;
+constexpr uint64 SEM_SIGNAL = 0x24;
 
 void Riscv::setupTrapHandler() {
     unsigned long addr = (unsigned long)&trap_handler;
@@ -107,6 +113,66 @@ void Riscv::trapHandler() {
             }
             case THREAD_DISPATCH: {
                 Thread::dispatch();
+
+                break;
+            }
+            case SEM_OPEN: {
+                Semaphore** handle = nullptr;
+                unsigned init;
+
+                asm volatile("ld a1, 11*8(%0)" :: "r"(framePointer));
+                asm volatile("mv %0, a1" : "=r"(handle));
+                asm volatile("ld a2, 12*8(%0)" :: "r"(framePointer));
+                asm volatile("mv %0, a2" : "=r"(init));
+
+                *handle = Semaphore::createSemaphore(init);
+
+                if (*handle != nullptr) asm volatile("li a0, 0");
+                else asm volatile("li a0, -1");
+
+                asm volatile("sd a0, 10*8(%0)" :: "r"(framePointer));
+
+                break;
+            }
+            case SEM_CLOSE: {
+                Semaphore* handle = nullptr;
+
+                asm volatile("ld a1, 11*8(%0)" :: "r"(framePointer));
+                asm volatile("mv %0, a1" : "=r"(handle));
+
+                if (handle) {
+                    handle->close();
+                    asm volatile("li a0, 0");
+                }
+                else asm volatile("li a0, -1");
+
+                break;
+            }
+            case SEM_WAIT: {
+                Semaphore* handle = nullptr;
+
+                asm volatile("ld a1, 11*8(%0)" :: "r"(framePointer));
+                asm volatile("mv %0, a1" : "=r"(handle));
+
+                if (handle) {
+                    handle->wait();
+                    asm volatile("li a0, 0");
+                }
+                else asm volatile("li a0, -1");
+
+                break;
+            }
+            case SEM_SIGNAL: {
+                Semaphore* handle = nullptr;
+
+                asm volatile("ld a1, 11*8(%0)" :: "r"(framePointer));
+                asm volatile("mv %0, a1" : "=r"(handle));
+
+                if (handle) {
+                    handle->signal();
+                    asm volatile("li a0, 0");
+                }
+                else asm volatile("li a0, -1");
 
                 break;
             }

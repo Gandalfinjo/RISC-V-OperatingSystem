@@ -18,4 +18,11 @@ int thread_create(thread_t*, void(*)(void*), void*);
 int thread_exit();
 void thread_dispatch();
 
+class Semaphore;
+typedef Semaphore* sem_t;
+int sem_open(sem_t*, unsigned);
+int sem_close(sem_t);
+int sem_wait(sem_t);
+int sem_signal(sem_t);
+
 #endif //PROJECT_BASE_SYSCALL_C_HPP

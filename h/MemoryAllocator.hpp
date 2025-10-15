@@ -20,9 +20,9 @@ public:
     static size_t mem_get_free_space();
     static size_t mem_get_largest_free_block();
 
-    static BlockHeader* freeListHead; // public only for testing, in later phases return it to private
+    // static BlockHeader* freeListHead; // public only for testing, in later phases return it to private
 private:
-    // static BlockHeader* freeListHead;
+    static BlockHeader* freeListHead;
     static void tryToJoin(BlockHeader*);
 };
 

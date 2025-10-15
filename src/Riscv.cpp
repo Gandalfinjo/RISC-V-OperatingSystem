@@ -37,50 +37,60 @@ void Riscv::trapHandler() {
         switch (code) {
             case MEM_ALLOC: {
                 size_t size;
+                asm volatile("ld a1, 11*8(%0)" :: "r"(framePointer));
                 asm volatile("mv %0, a1" : "=r"(size));
                 void* ptr = MemoryAllocator::mem_alloc(size);
                 asm volatile("mv a0, %0" :: "r"(ptr));
+                asm volatile("sd a0, 10*8(%0)" :: "r"(framePointer));
                 break;
             }
             case MEM_FREE: {
                 void* addr;
+                asm volatile("ld a1, 11*8(%0)" :: "r"(framePointer));
                 asm volatile("mv %0, a1" : "=r"(addr));
                 int status = MemoryAllocator::mem_free(addr);
                 asm volatile("mv a0, %0" :: "r"(status));
+                asm volatile("sd a0, 10*8(%0)" :: "r"(framePointer));
                 break;
             }
             case MEM_GET_FREE_SPACE: {
                 size_t freeSpace = MemoryAllocator::mem_get_free_space();
                 asm volatile("mv a0, %0" :: "r"(freeSpace));
+                asm volatile("sd a0, 10*8(%0)" :: "r"(framePointer));
                 break;
             }
             case MEM_GET_LARGEST_FREE_BLOCK: {
                 size_t largest = MemoryAllocator::mem_get_largest_free_block();
                 asm volatile("mv a0, %0" :: "r"(largest));
+                asm volatile("sd a0, 10*8(%0)" :: "r"(framePointer));
                 break;
             }
             case THREAD_CREATE: {
                 Thread** handle = nullptr;
                 void (*start_routine)(void*) = nullptr;
                 void* args = nullptr;
-                void* stackTop = nullptr;
+                void* stack = nullptr;
 
+                asm volatile("ld a1, 11*8(%0)" :: "r"(framePointer));
                 asm volatile("mv %0, a1" : "=r"(handle));
+                asm volatile("ld a2, 12*8(%0)" :: "r"(framePointer));
                 asm volatile("mv %0, a2" : "=r"(start_routine));
+                asm volatile("ld a3, 13*8(%0)" :: "r"(framePointer));
                 asm volatile("mv %0, a3" : "=r"(args));
-                asm volatile("mv %0, a4" : "=r"(stackTop));
+                asm volatile("ld a4, 14*8(%0)" :: "r"(framePointer));
+                asm volatile("mv %0, a4" : "=r"(stack));
 
                 size_t stackSize = DEFAULT_STACK_SIZE;
-                //void* stackBase = (char*)stackTop - stackSize;
 
-                *handle = Thread::createThread(start_routine, args, stackTop, stackSize);
-                // *handle = Thread::createThread(start_routine, args);
+                *handle = Thread::createThread(start_routine, args, stack, stackSize);
 
                 if (*handle != nullptr) {
                     (*handle)->start();
                     asm volatile("li a0, 0");
                 }
                 else asm volatile("li a0, -1");
+
+                asm volatile("sd a0, 10*8(%0)" :: "r"(framePointer));
 
                 break;
             }

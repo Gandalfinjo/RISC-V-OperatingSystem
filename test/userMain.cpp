@@ -1,104 +1,107 @@
-//
-// Created by os on 10/7/25.
-//
+#include "printing.hpp"
 
-#include "../h/syscall_c.hpp"
-#include "../lib/console.h"
+#define LEVEL_1_IMPLEMENTED 0
+#define LEVEL_2_IMPLEMENTED 1
+#define LEVEL_3_IMPLEMENTED 0
+#define LEVEL_4_IMPLEMENTED 0
 
-void test_ecall() {
-    asm volatile (
-        "li a0, 0\n"
-        "li a7, 0xDE\n"
-        "ecall\n"
-    );
-}
+#if LEVEL_2_IMPLEMENTED == 1
+// TEST 1 (zadatak 2, niti C API i sinhrona promena konteksta)
+#include "../test/Threads_C_API_test.hpp"
+// TEST 2 (zadatak 2., niti CPP API i sinhrona promena konteksta)
+//#include "../test/Threads_CPP_API_test.hpp"
+// TEST 7 (zadatak 2., testiranje da li se korisnicki kod izvrsava u korisnickom rezimu)
+#include "../test/System_Mode_test.hpp"
+#endif
 
-void printChar(char c) { __putc(c); }
-void printString(const char* s) { while (*s) __putc(*s++); }
-void printNumber(size_t num) {
-    if (num == 0) { __putc('0'); return; }
-    char buf[20]; int i = 0;
-    while (num) { buf[i++] = '0' + (num % 10); num /= 10; }
-    while (i--) __putc(buf[i]);
-}
+#if LEVEL_3_IMPLEMENTED == 1
+// TEST 3 (zadatak 3., kompletan C API sa semaforima, sinhrona promena konteksta)
+#include "../test/ConsumerProducer_C_API_test.hpp"
+// TEST 4 (zadatak 3., kompletan CPP API sa semaforima, sinhrona promena konteksta)
+#include "../test/ConsumerProducer_CPP_Sync_API_test.hpp"
+#endif
 
-void printPointer(void* ptr) {
-    printNumber((size_t)ptr);
-}
+#if LEVEL_4_IMPLEMENTED == 1
+// TEST 5 (zadatak 4., thread_sleep test C API)
+#include "../test/ThreadSleep_C_API_test.hpp"
+// TEST 6 (zadatak 4. CPP API i asinhrona promena konteksta)
+#include "../test/ConsumerProducer_CPP_API_test.hpp"
+#include "System_Mode_test.hpp"
+
+#endif
 
 void userMain() {
-    printString("UserMain started\n");
+    printString("Unesite broj testa? [1-7]\n");
+    // int test = __getc() - '0';
+    // __getc(); // Enter posle broja
+    int test = 1;
 
-    printString("Free space: ");
-    printNumber(mem_get_free_space());
-    printString("\n");
+    if ((test >= 1 && test <= 2) || test == 7) {
+        if (LEVEL_2_IMPLEMENTED == 0) {
+            printString("Nije navedeno da je zadatak 2 implementiran\n");
+            return;
+        }
+    }
 
-    void* p1 = mem_alloc(160);
-    printString("Allocated: "); printNumber((size_t)p1); printString("\n");
+    if (test >= 3 && test <= 4) {
+        if (LEVEL_3_IMPLEMENTED == 0) {
+            printString("Nije navedeno da je zadatak 3 implementiran\n");
+            return;
+        }
+    }
 
-    printString("Free space after alloc: ");
-    printNumber(mem_get_free_space());
-    printString("\n");
+    if (test >= 5 && test <= 6) {
+        if (LEVEL_4_IMPLEMENTED == 0) {
+            printString("Nije navedeno da je zadatak 4 implementiran\n");
+            return;
+        }
+    }
 
-    mem_free(p1);
-    printString("Freed p1\n");
-
-    printString("Free space after free: ");
-    printNumber(mem_get_free_space());
-    printString("\n");
-
-    // BlockHeader* curr = MemoryAllocator::freeListHead;
-    // while(curr) {
-    //     printString("Free block at "); printPointer(curr);
-    //     printString(" size "); printNumber(curr->size); printString("\n");
-    //     curr = curr->next;
-    // }
-    //
-    // void* p1 = MemoryAllocator::mem_alloc(10);
-    // void* p2 = MemoryAllocator::mem_alloc(20);
-    //
-    // printString("p1: "); printPointer(p1); printString("\n");
-    // printString("p2: "); printPointer(p2); printString("\n");
-    //
-    // MemoryAllocator::mem_free(p1);
-    // printString("Freed p1\n");
-    //
-    // curr = MemoryAllocator::freeListHead;
-    // while(curr) {
-    //     printString("Free block at "); printPointer(curr);
-    //     printString(" size "); printNumber(curr->size); printString("\n");
-    //     curr = curr->next;
-    // }
-    //
-    // printString("Total free space: ");
-    // printNumber(MemoryAllocator::mem_get_free_space());
-    // printString("\n");
-    //
-    // printString("Largest free block: ");
-    // printNumber(MemoryAllocator::mem_get_largest_free_block());
-    // printString("\n");
-    //
-    // MemoryAllocator::mem_free(p2);
-    // printString("Freed p2\n");
-    //
-    // curr = MemoryAllocator::freeListHead;
-    // while(curr) {
-    //     printString("Free block at "); printPointer(curr);
-    //     printString(" size "); printNumber(curr->size); printString("\n");
-    //     curr = curr->next;
-    // }
-    //
-    // printString("Total free space: ");
-    // printNumber(MemoryAllocator::mem_get_free_space());
-    // printString("\n");
-    //
-    // printString("Largest free block: ");
-    // printNumber(MemoryAllocator::mem_get_largest_free_block());
-    // printString("\n");
-    //
-    // printString("Pre ecall\n");
-    //
-    // test_ecall();
-    //
-    // printString("After ecall\n");
+    switch (test) {
+        case 1:
+#if LEVEL_2_IMPLEMENTED == 1
+            Threads_C_API_test();
+            printString("TEST 1 (zadatak 2, niti C API i sinhrona promena konteksta)\n");
+#endif
+            break;
+        case 2:
+#if LEVEL_2_IMPLEMENTED == 1
+            //T hreads_CPP_API_test();
+            // printString("TEST 2 (zadatak 2., niti CPP API i sinhrona promena konteksta)\n");
+#endif
+            break;
+        case 3:
+#if LEVEL_3_IMPLEMENTED == 1
+            producerConsumer_C_API();
+            printString("TEST 3 (zadatak 3., kompletan C API sa semaforima, sinhrona promena konteksta)\n");
+#endif
+            break;
+        case 4:
+#if LEVEL_3_IMPLEMENTED == 1
+            producerConsumer_CPP_Sync_API();
+            printString("TEST 4 (zadatak 3., kompletan CPP API sa semaforima, sinhrona promena konteksta)\n");
+#endif
+            break;
+        case 5:
+#if LEVEL_4_IMPLEMENTED == 1
+            testSleeping();
+            printString("TEST 5 (zadatak 4., thread_sleep test C API)\n");
+#endif
+            break;
+        case 6:
+#if LEVEL_4_IMPLEMENTED == 1
+            testConsumerProducer();
+            printString("TEST 6 (zadatak 4. CPP API i asinhrona promena konteksta)\n");
+#endif
+            break;
+        case 7:
+#if LEVEL_2_IMPLEMENTED == 1
+            System_Mode_test();
+            printString("Test se nije uspesno zavrsio\n");
+            printString("TEST 7 (zadatak 2., testiranje da li se korisnicki kod izvrsava u korisnickom rezimu)\n");
+#endif
+            break;
+        default:
+            printString("Niste uneli odgovarajuci broj za test\n");
+    }
 }

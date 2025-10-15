@@ -72,15 +72,20 @@ void Thread::dispatch() {
         Scheduler::put(old);
     }
 
-    Thread* next = Scheduler::get();
-    if (!next) return;
+    running = Scheduler::get();
+    if (!running) return;
 
-    next->state = RUNNING;
-    running = next;
+    running->state = RUNNING;
 
-    contextSwitch(&old->context, &next->context);
+    if (old && old->state == FINISHED) {
+        MemoryAllocator::mem_free(old->stack);
+        old->stack = nullptr;
+    }
+
+    contextSwitch(&old->context, &running->context);
 }
 
 void Thread::yield() {
-    dispatch();
+    asm volatile ("li a0, 0x13");
+    asm volatile ("ecall");
 }

@@ -22,6 +22,7 @@ public:
     static Thread* running;
 
     friend class Scheduler;
+    friend class Semaphore;
 
     using Body = void(*)(void*);
 
@@ -78,7 +79,8 @@ private:
     void* args;
 
     ThreadState state;
-    Thread* next;
+    Thread* schedulerNext;
+    Thread* semaphoreNext;
 
     void allocateStack(size_t bytes);   // Helper: make byte size in blocks and allocate
     static void contextSwitch(Context* oldContext, Context* newContext);

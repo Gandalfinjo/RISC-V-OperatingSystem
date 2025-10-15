@@ -12,12 +12,12 @@ Thread* Thread::running = nullptr;
 int Thread::staticId = 0;
 
 Thread::Thread(Body b, void* a, size_t stackSizeBytes)
-    : id(staticId++), stack(nullptr), stackSize(stackSizeBytes), body(b), args(a), state(NEW), next(nullptr) {
+    : id(staticId++), stack(nullptr), stackSize(stackSizeBytes), body(b), args(a), state(NEW), schedulerNext(nullptr), semaphoreNext(nullptr) {
     allocateStack(stackSizeBytes);
 }
 
 Thread::Thread(Body b, void* a, void* externalStackBase, size_t externalStackSize)
-    : id(staticId++), stack(nullptr), stackSize(0), body(b), args(a), state(NEW), next(nullptr) {
+    : id(staticId++), stack(nullptr), stackSize(0), body(b), args(a), state(NEW), schedulerNext(nullptr), semaphoreNext(nullptr) {
     stack = externalStackBase;
     stackSize = externalStackSize;
 }

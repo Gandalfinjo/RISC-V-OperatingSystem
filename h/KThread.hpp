@@ -16,22 +16,22 @@ enum ThreadState {
     FINISHED
 };
 
-class Thread {
+class KThread {
 public:
     static int staticId;
-    static Thread* running;
+    static KThread* running;
 
     friend class Scheduler;
     friend class Semaphore;
 
     using Body = void(*)(void*);
 
-    Thread(Body, void*, size_t stackSizeBytes = DEFAULT_STACK_SIZE);
-    Thread(Body, void*, void*, size_t);
-    ~Thread();
+    KThread(Body, void*, size_t stackSizeBytes = DEFAULT_STACK_SIZE);
+    KThread(Body, void*, void*, size_t);
+    ~KThread();
 
-    static Thread* createThread(Body, void*, size_t stackSizeBytes = DEFAULT_STACK_SIZE);
-    static Thread* createThread(Body, void*, void*, size_t);
+    static KThread* createThread(Body, void*, size_t stackSizeBytes = DEFAULT_STACK_SIZE);
+    static KThread* createThread(Body, void*, void*, size_t);
 
     void start();                       // prepare and put in the Scheduler
     void exit();                        // mark as finished (could be called from wrapper)
@@ -79,8 +79,8 @@ private:
     void* args;
 
     ThreadState state;
-    Thread* schedulerNext;
-    Thread* semaphoreNext;
+    KThread* schedulerNext;
+    KThread* semaphoreNext;
 
     void allocateStack(size_t bytes);   // Helper: make byte size in blocks and allocate
     static void contextSwitch(Context* oldContext, Context* newContext);

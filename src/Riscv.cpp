@@ -5,7 +5,7 @@
 #include "../h/Riscv.hpp"
 
 #include "../h/MemoryAllocator.hpp"
-#include "../h/Thread.hpp"
+#include "../h/KThread.hpp"
 #include "../h/Semaphore.hpp"
 #include "../lib/hw.h"
 
@@ -72,7 +72,7 @@ void Riscv::trapHandler() {
                 break;
             }
             case THREAD_CREATE: {
-                Thread** handle = nullptr;
+                KThread** handle = nullptr;
                 void (*start_routine)(void*) = nullptr;
                 void* args = nullptr;
                 void* stack = nullptr;
@@ -88,7 +88,7 @@ void Riscv::trapHandler() {
 
                 size_t stackSize = DEFAULT_STACK_SIZE;
 
-                *handle = Thread::createThread(start_routine, args, stack, stackSize);
+                *handle = KThread::createThread(start_routine, args, stack, stackSize);
 
                 if (*handle != nullptr) {
                     (*handle)->start();
@@ -101,18 +101,18 @@ void Riscv::trapHandler() {
                 break;
             }
             case THREAD_EXIT: {
-                if (Thread::running) {
-                    Thread::running->exit();
+                if (KThread::running) {
+                    KThread::running->exit();
                 }
 
-                Thread::dispatch();
+                KThread::dispatch();
 
                 asm volatile("li a0, 0");
 
                 break;
             }
             case THREAD_DISPATCH: {
-                Thread::dispatch();
+                KThread::dispatch();
 
                 break;
             }

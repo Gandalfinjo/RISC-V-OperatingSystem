@@ -1,13 +1,13 @@
 .section .text
-.global _ZN6Thread13contextSwitchEPNS_7ContextES1_
-.type _ZN6Thread13contextSwitchEPNS_7ContextES1_, @function
+.global _ZN7KThread13contextSwitchEPNS_7ContextES1_
+.type _ZN7KThread13contextSwitchEPNS_7ContextES1_, @function
 
-.global _ZN6Thread11initContextEPNS_7ContextEPFvvEPv
-.type _ZN6Thread11initContextEPNS_7ContextEPFvvEPv, @function
+.global _ZN7KThread11initContextEPNS_7ContextEPFvvEPv
+.type _ZN7KThread11initContextEPNS_7ContextEPFvvEPv, @function
 
 .align 4
 
-_ZN6Thread13contextSwitchEPNS_7ContextES1_:
+_ZN7KThread13contextSwitchEPNS_7ContextES1_:
     # a0 = &oldContext, a1 = &newContext
 
     sd ra, 0(a0)
@@ -18,7 +18,7 @@ _ZN6Thread13contextSwitchEPNS_7ContextES1_:
 
     ret
 
-_ZN6Thread11initContextEPNS_7ContextEPFvvEPv:
+_ZN7KThread11initContextEPNS_7ContextEPFvvEPv:
     # a0 = context, a1 = entry (Thread::wrapper), a2 = stackTop
 
     sd a1, 0(a0)

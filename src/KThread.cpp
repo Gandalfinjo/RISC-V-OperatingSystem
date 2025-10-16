@@ -2,42 +2,42 @@
 // Created by os on 10/8/25.
 //
 
-#include "../h/Thread.hpp"
+#include "../h/KThread.hpp"
 #include "../h/Scheduler.hpp"
 #include "../h/MemoryAllocator.hpp"
 #include "../lib/hw.h"
 
-Thread* Thread::running = nullptr;
+KThread* KThread::running = nullptr;
 
-int Thread::staticId = 0;
+int KThread::staticId = 0;
 
-Thread::Thread(Body b, void* a, size_t stackSizeBytes)
+KThread::KThread(Body b, void* a, size_t stackSizeBytes)
     : id(staticId++), stack(nullptr), stackSize(stackSizeBytes), body(b), args(a), state(NEW), schedulerNext(nullptr), semaphoreNext(nullptr) {
     allocateStack(stackSizeBytes);
 }
 
-Thread::Thread(Body b, void* a, void* externalStackBase, size_t externalStackSize)
+KThread::KThread(Body b, void* a, void* externalStackBase, size_t externalStackSize)
     : id(staticId++), stack(nullptr), stackSize(0), body(b), args(a), state(NEW), schedulerNext(nullptr), semaphoreNext(nullptr) {
     stack = externalStackBase;
     stackSize = externalStackSize;
 }
 
-Thread::~Thread() {
+KThread::~KThread() {
     if (stack) {
         MemoryAllocator::mem_free(stack);
         stack = nullptr;
     }
 }
 
-Thread* Thread::createThread(Body b, void* a, size_t stackSizeBytes) {
-    return new Thread(b, a, stackSizeBytes);
+KThread* KThread::createThread(Body b, void* a, size_t stackSizeBytes) {
+    return new KThread(b, a, stackSizeBytes);
 }
 
-Thread* Thread::createThread(Body b, void* a, void* externalStackBase, size_t externalStackSize) {
-    return new Thread(b, a, externalStackBase, externalStackSize);
+KThread* KThread::createThread(Body b, void* a, void* externalStackBase, size_t externalStackSize) {
+    return new KThread(b, a, externalStackBase, externalStackSize);
 }
 
-void Thread::allocateStack(size_t bytes) {
+void KThread::allocateStack(size_t bytes) {
     size_t blocks = bytes / MEM_BLOCK_SIZE;
     if (bytes % MEM_BLOCK_SIZE != 0) blocks++;
 
@@ -45,7 +45,7 @@ void Thread::allocateStack(size_t bytes) {
     stackSize = blocks * MEM_BLOCK_SIZE;
 }
 
-void Thread::start() {
+void KThread::start() {
     if (state != NEW) return;
 
     void* stackTop = (char*)stack + stackSize;
@@ -54,18 +54,18 @@ void Thread::start() {
     Scheduler::put(this);
 }
 
-void Thread::exit() {
+void KThread::exit() {
     state = FINISHED;
 }
 
-void Thread::wrapper() {
+void KThread::wrapper() {
     running->body(running->args);
     running->exit();
     yield();
 }
 
-void Thread::dispatch() {
-    Thread* old = running;
+void KThread::dispatch() {
+    KThread* old = running;
 
     if (old && old->state != FINISHED) {
         old->state = READY;
@@ -85,7 +85,7 @@ void Thread::dispatch() {
     contextSwitch(&old->context, &running->context);
 }
 
-void Thread::yield() {
+void KThread::yield() {
     asm volatile ("li a0, 0x13");
     asm volatile ("ecall");
 }

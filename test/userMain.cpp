@@ -9,7 +9,7 @@
 // TEST 1 (zadatak 2, niti C API i sinhrona promena konteksta)
 #include "../test/Threads_C_API_test.hpp"
 // TEST 2 (zadatak 2., niti CPP API i sinhrona promena konteksta)
-//#include "../test/Threads_CPP_API_test.hpp"
+#include "../test/Threads_CPP_API_test.hpp"
 // TEST 7 (zadatak 2., testiranje da li se korisnicki kod izvrsava u korisnickom rezimu)
 #include "../test/System_Mode_test.hpp"
 #endif
@@ -34,7 +34,7 @@ void userMain() {
     printString("Unesite broj testa? [1-7]\n");
     // int test = __getc() - '0';
     // __getc(); // Enter posle broja
-    int test = 1;
+    int test = 2;
 
     if ((test >= 1 && test <= 2) || test == 7) {
         if (LEVEL_2_IMPLEMENTED == 0) {
@@ -66,8 +66,8 @@ void userMain() {
             break;
         case 2:
 #if LEVEL_2_IMPLEMENTED == 1
-            //T hreads_CPP_API_test();
-            // printString("TEST 2 (zadatak 2., niti CPP API i sinhrona promena konteksta)\n");
+            Threads_CPP_API_test();
+            printString("TEST 2 (zadatak 2., niti CPP API i sinhrona promena konteksta)\n");
 #endif
             break;
         case 3:

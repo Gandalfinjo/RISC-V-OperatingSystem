@@ -8,7 +8,7 @@
 #include "MemoryAllocator.hpp"
 #include "../lib/hw.h"
 
-class Thread;
+class KThread;
 
 class Semaphore {
 public:
@@ -44,11 +44,11 @@ private:
     explicit Semaphore(uint64 init) : val(init) {}
 
     int val;
-    Thread* head = nullptr;
-    Thread* tail = nullptr;
+    KThread* head = nullptr;
+    KThread* tail = nullptr;
 
-    Thread* get();
-    void put(Thread*);
+    KThread* get();
+    void put(KThread*);
 };
 
 #endif //PROJECT_BASE_SEMAPHORE_HPP

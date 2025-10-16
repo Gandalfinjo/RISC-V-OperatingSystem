@@ -3,17 +3,17 @@
 //
 
 #include "../h/Semaphore.hpp"
-#include "../h/Thread.hpp"
+#include "../h/KThread.hpp"
 #include "../h/Scheduler.hpp"
 
 Semaphore *Semaphore::createSemaphore(uint64 init) {
     return new Semaphore(init);
 }
 
-Thread* Semaphore::get() {
+KThread* Semaphore::get() {
     if (!head) return nullptr;
 
-    Thread* thread = head;
+    KThread* thread = head;
     head = head->semaphoreNext;
 
     if (!head) tail = nullptr;
@@ -23,7 +23,7 @@ Thread* Semaphore::get() {
 }
 
 
-void Semaphore::put(Thread *thread) {
+void Semaphore::put(KThread *thread) {
     if (!head) head = thread;
     else tail->semaphoreNext = thread;
     tail = thread;
@@ -33,9 +33,9 @@ void Semaphore::wait() {
     val--;
 
     if (val < 0) {
-        Thread::running->setState(BLOCKED);
-        put(Thread::running);
-        Thread::dispatch();
+        KThread::running->setState(BLOCKED);
+        put(KThread::running);
+        KThread::dispatch();
     }
 }
 
@@ -43,7 +43,7 @@ void Semaphore::signal() {
     val++;
 
     if (val <= 0) {
-        Thread* thread = get();
+        KThread* thread = get();
 
         if (thread) {
             thread->setState(READY);
@@ -54,7 +54,7 @@ void Semaphore::signal() {
 
 void Semaphore::close() {
     while (head) {
-        Thread* thread = get();
+        KThread* thread = get();
         thread->setState(READY);
         Scheduler::put(thread);
     }

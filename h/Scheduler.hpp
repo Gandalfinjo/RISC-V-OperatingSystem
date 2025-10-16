@@ -5,16 +5,16 @@
 #ifndef PROJECT_BASE_SCHEDULER_HPP
 #define PROJECT_BASE_SCHEDULER_HPP
 
-class Thread;
+class KThread;
 
 class Scheduler {
 public:
-    static Thread* get();
-    static void put(Thread*);
+    static KThread* get();
+    static void put(KThread*);
     static bool isEmpty();
 private:
-    static Thread* head;
-    static Thread* tail;
+    static KThread* head;
+    static KThread* tail;
 };
 
 #endif //PROJECT_BASE_SCHEDULER_HPP

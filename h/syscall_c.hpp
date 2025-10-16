@@ -12,8 +12,8 @@ int mem_free(void*);
 size_t mem_get_free_space();
 size_t mem_get_largest_free_block();
 
-class Thread;
-typedef Thread* thread_t;
+class KThread;
+typedef KThread* thread_t;
 int thread_create(thread_t*, void(*)(void*), void*);
 int thread_exit();
 void thread_dispatch();

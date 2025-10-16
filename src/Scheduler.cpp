@@ -3,15 +3,15 @@
 //
 
 #include "../h/Scheduler.hpp"
-#include "../h/Thread.hpp"
+#include "../h/KThread.hpp"
 
-Thread* Scheduler::head = nullptr;
-Thread* Scheduler::tail = nullptr;
+KThread* Scheduler::head = nullptr;
+KThread* Scheduler::tail = nullptr;
 
-Thread* Scheduler::get() {
+KThread* Scheduler::get() {
     if (!head) return nullptr;
 
-    Thread* thread = head;
+    KThread* thread = head;
     head = head->schedulerNext;
 
     if (!head) tail = nullptr;
@@ -20,7 +20,7 @@ Thread* Scheduler::get() {
     return thread;
 }
 
-void Scheduler::put(Thread* thread) {
+void Scheduler::put(KThread* thread) {
     if (!head) head = thread;
     else tail->schedulerNext = thread;
     tail = thread;

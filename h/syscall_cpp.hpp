@@ -7,6 +7,7 @@
 
 #include "syscall_c.hpp"
 #include "KThread.hpp"
+#include "KSemaphore.hpp"
 
 void* operator new (size_t);
 void operator delete (void*);

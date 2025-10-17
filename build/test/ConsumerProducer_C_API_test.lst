@@ -1,0 +1,1441 @@
+GAS LISTING /tmp/ccGIBCON.s 			page 1
+
+
+   1              		.file	"ConsumerProducer_C_API_test.cpp"
+   2              		.option pic
+   3              		.option norelax
+   4              		.text
+   5              	.Ltext0:
+   6              		.align	2
+   8              	_ZL16producerKeyboardPv:
+   9              	.LFB0:
+  10              		.file 1 "test/ConsumerProducer_C_API_test.cpp"
+   1:test/ConsumerProducer_C_API_test.cpp **** 
+   2:test/ConsumerProducer_C_API_test.cpp **** #include "../h/syscall_c.hpp"
+   3:test/ConsumerProducer_C_API_test.cpp **** 
+   4:test/ConsumerProducer_C_API_test.cpp **** #include "buffer.hpp"
+   5:test/ConsumerProducer_C_API_test.cpp **** 
+   6:test/ConsumerProducer_C_API_test.cpp **** static sem_t waitForAll;
+   7:test/ConsumerProducer_C_API_test.cpp **** 
+   8:test/ConsumerProducer_C_API_test.cpp **** struct thread_data {
+   9:test/ConsumerProducer_C_API_test.cpp ****     int id;
+  10:test/ConsumerProducer_C_API_test.cpp ****     Buffer *buffer;
+  11:test/ConsumerProducer_C_API_test.cpp ****     sem_t wait;
+  12:test/ConsumerProducer_C_API_test.cpp **** };
+  13:test/ConsumerProducer_C_API_test.cpp **** 
+  14:test/ConsumerProducer_C_API_test.cpp **** static volatile int threadEnd = 0;
+  15:test/ConsumerProducer_C_API_test.cpp **** 
+  16:test/ConsumerProducer_C_API_test.cpp **** static void producerKeyboard(void *arg) {
+  11              		.loc 1 16 41
+  12              		.cfi_startproc
+  13              	.LVL0:
+  14 0000 130101FD 		addi	sp,sp,-48
+  15              		.cfi_def_cfa_offset 48
+  16 0004 23341102 		sd	ra,40(sp)
+  17 0008 23308102 		sd	s0,32(sp)
+  18 000c 233C9100 		sd	s1,24(sp)
+  19 0010 23382101 		sd	s2,16(sp)
+  20 0014 23343101 		sd	s3,8(sp)
+  21              		.cfi_offset 1, -8
+  22              		.cfi_offset 8, -16
+  23              		.cfi_offset 9, -24
+  24              		.cfi_offset 18, -32
+  25              		.cfi_offset 19, -40
+  26 0018 13040103 		addi	s0,sp,48
+  27              		.cfi_def_cfa 8, 0
+  28 001c 93090500 		mv	s3,a0
+  17:test/ConsumerProducer_C_API_test.cpp ****     struct thread_data *data = (struct thread_data *) arg;
+  29              		.loc 1 17 5
+  30              	.LVL1:
+  18:test/ConsumerProducer_C_API_test.cpp **** 
+  19:test/ConsumerProducer_C_API_test.cpp ****     int key;
+  31              		.loc 1 19 5
+  20:test/ConsumerProducer_C_API_test.cpp ****     int i = 0;
+  32              		.loc 1 20 5
+  33              		.loc 1 20 9 is_stmt 0
+  34 0020 93040000 		li	s1,0
+  35 0024 6F000001 		j	.L2
+  36              	.LVL2:
+  37              	.L6:
+  21:test/ConsumerProducer_C_API_test.cpp ****     for (; i < 5; i++) {
+GAS LISTING /tmp/ccGIBCON.s 			page 2
+
+
+  22:test/ConsumerProducer_C_API_test.cpp ****         key = i + 1;
+  23:test/ConsumerProducer_C_API_test.cpp ****         data->buffer->put(key);
+  24:test/ConsumerProducer_C_API_test.cpp **** 
+  25:test/ConsumerProducer_C_API_test.cpp ****         if (i % (10 * data->id) == 0) {
+  26:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+  38              		.loc 1 26 13 is_stmt 1
+  39              		.loc 1 26 28 is_stmt 0
+  40 0028 97000000 		call	_Z15thread_dispatchv@plt
+  40      E7800000 
+  41              	.LVL3:
+  42              	.L4:
+  16:test/ConsumerProducer_C_API_test.cpp ****     struct thread_data *data = (struct thread_data *) arg;
+  43              		.loc 1 16 41 discriminator 1
+  44 0030 93040900 		mv	s1,s2
+  45              	.L2:
+  46              	.LVL4:
+  21:test/ConsumerProducer_C_API_test.cpp ****     for (; i < 5; i++) {
+  47              		.loc 1 21 5 is_stmt 1 discriminator 1
+  21:test/ConsumerProducer_C_API_test.cpp ****     for (; i < 5; i++) {
+  48              		.loc 1 21 14 discriminator 1
+  49 0034 93074000 		li	a5,4
+  50 0038 63CA9702 		bgt	s1,a5,.L3
+  22:test/ConsumerProducer_C_API_test.cpp ****         data->buffer->put(key);
+  51              		.loc 1 22 9
+  22:test/ConsumerProducer_C_API_test.cpp ****         data->buffer->put(key);
+  52              		.loc 1 22 13 is_stmt 0
+  53 003c 1B891400 		addiw	s2,s1,1
+  54              	.LVL5:
+  23:test/ConsumerProducer_C_API_test.cpp **** 
+  55              		.loc 1 23 9 is_stmt 1
+  23:test/ConsumerProducer_C_API_test.cpp **** 
+  56              		.loc 1 23 26 is_stmt 0
+  57 0040 93050900 		mv	a1,s2
+  58 0044 03B58900 		ld	a0,8(s3)
+  59 0048 97000000 		call	_ZN6Buffer3putEi@plt
+  59      E7800000 
+  60              	.LVL6:
+  25:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+  61              		.loc 1 25 9 is_stmt 1
+  25:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+  62              		.loc 1 25 29 is_stmt 0
+  63 0050 03A70900 		lw	a4,0(s3)
+  25:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+  64              		.loc 1 25 21
+  65 0054 9B172700 		slliw	a5,a4,2
+  66 0058 BB87E700 		addw	a5,a5,a4
+  67 005c 9B971700 		slliw	a5,a5,1
+  25:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+  68              		.loc 1 25 15
+  69 0060 BBE4F402 		remw	s1,s1,a5
+  70              	.LVL7:
+  25:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+  71              		.loc 1 25 9
+  72 0064 E39604FC 		bnez	s1,.L4
+  73 0068 6FF01FFC 		j	.L6
+  74              	.LVL8:
+  75              	.L3:
+GAS LISTING /tmp/ccGIBCON.s 			page 3
+
+
+  27:test/ConsumerProducer_C_API_test.cpp ****         }
+  28:test/ConsumerProducer_C_API_test.cpp ****     }
+  29:test/ConsumerProducer_C_API_test.cpp **** 
+  30:test/ConsumerProducer_C_API_test.cpp ****     threadEnd = 1;
+  76              		.loc 1 30 5 is_stmt 1
+  77              		.loc 1 30 15 is_stmt 0
+  78 006c 93071000 		li	a5,1
+  79 0070 17070000 		sw	a5,.LANCHOR0,a4
+  79      2320F700 
+  31:test/ConsumerProducer_C_API_test.cpp ****     data->buffer->put('!');
+  80              		.loc 1 31 5 is_stmt 1
+  81              		.loc 1 31 22 is_stmt 0
+  82 0078 93051002 		li	a1,33
+  83 007c 03B58900 		ld	a0,8(s3)
+  84 0080 97000000 		call	_ZN6Buffer3putEi@plt
+  84      E7800000 
+  85              	.LVL9:
+  32:test/ConsumerProducer_C_API_test.cpp **** 
+  33:test/ConsumerProducer_C_API_test.cpp ****     sem_signal(data->wait);
+  86              		.loc 1 33 5 is_stmt 1
+  87              		.loc 1 33 15 is_stmt 0
+  88 0088 03B50901 		ld	a0,16(s3)
+  89 008c 97000000 		call	_Z10sem_signalP10KSemaphore@plt
+  89      E7800000 
+  90              	.LVL10:
+  34:test/ConsumerProducer_C_API_test.cpp **** }
+  91              		.loc 1 34 1
+  92 0094 83308102 		ld	ra,40(sp)
+  93              		.cfi_restore 1
+  94 0098 03340102 		ld	s0,32(sp)
+  95              		.cfi_restore 8
+  96              		.cfi_def_cfa 2, 48
+  97 009c 83348101 		ld	s1,24(sp)
+  98              		.cfi_restore 9
+  99              	.LVL11:
+ 100 00a0 03390101 		ld	s2,16(sp)
+ 101              		.cfi_restore 18
+ 102 00a4 83398100 		ld	s3,8(sp)
+ 103              		.cfi_restore 19
+ 104              	.LVL12:
+ 105 00a8 13010103 		addi	sp,sp,48
+ 106              		.cfi_def_cfa_offset 0
+ 107 00ac 67800000 		jr	ra
+ 108              		.cfi_endproc
+ 109              	.LFE0:
+ 111              		.align	2
+ 113              	_ZL8producerPv:
+ 114              	.LFB1:
+  35:test/ConsumerProducer_C_API_test.cpp **** 
+  36:test/ConsumerProducer_C_API_test.cpp **** static void producer(void *arg) {
+ 115              		.loc 1 36 33 is_stmt 1
+ 116              		.cfi_startproc
+ 117              	.LVL13:
+ 118 00b0 130101FE 		addi	sp,sp,-32
+ 119              		.cfi_def_cfa_offset 32
+ 120 00b4 233C1100 		sd	ra,24(sp)
+ 121 00b8 23388100 		sd	s0,16(sp)
+GAS LISTING /tmp/ccGIBCON.s 			page 4
+
+
+ 122 00bc 23349100 		sd	s1,8(sp)
+ 123 00c0 23302101 		sd	s2,0(sp)
+ 124              		.cfi_offset 1, -8
+ 125              		.cfi_offset 8, -16
+ 126              		.cfi_offset 9, -24
+ 127              		.cfi_offset 18, -32
+ 128 00c4 13040102 		addi	s0,sp,32
+ 129              		.cfi_def_cfa 8, 0
+ 130 00c8 93040500 		mv	s1,a0
+  37:test/ConsumerProducer_C_API_test.cpp ****     struct thread_data *data = (struct thread_data *) arg;
+ 131              		.loc 1 37 5
+ 132              	.LVL14:
+  38:test/ConsumerProducer_C_API_test.cpp **** 
+  39:test/ConsumerProducer_C_API_test.cpp ****     int i = 0;
+ 133              		.loc 1 39 5
+ 134              		.loc 1 39 9 is_stmt 0
+ 135 00cc 13090000 		li	s2,0
+ 136 00d0 6F00C000 		j	.L8
+ 137              	.LVL15:
+ 138              	.L12:
+  40:test/ConsumerProducer_C_API_test.cpp ****     while (!threadEnd) {
+  41:test/ConsumerProducer_C_API_test.cpp ****         data->buffer->put(data->id + '0');
+  42:test/ConsumerProducer_C_API_test.cpp ****         i++;
+  43:test/ConsumerProducer_C_API_test.cpp **** 
+  44:test/ConsumerProducer_C_API_test.cpp ****         if (i % (10 * data->id) == 0) {
+  45:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+ 139              		.loc 1 45 13 is_stmt 1
+ 140              		.loc 1 45 28 is_stmt 0
+ 141 00d4 97000000 		call	_Z15thread_dispatchv@plt
+ 141      E7800000 
+ 142              	.LVL16:
+ 143              	.L8:
+  40:test/ConsumerProducer_C_API_test.cpp ****     while (!threadEnd) {
+ 144              		.loc 1 40 5 is_stmt 1
+  40:test/ConsumerProducer_C_API_test.cpp ****     while (!threadEnd) {
+ 145              		.loc 1 40 12
+ 146 00dc 97070000 		lw	a5,.LANCHOR0
+ 146      83A70700 
+ 147 00e4 639E0702 		bnez	a5,.L9
+  41:test/ConsumerProducer_C_API_test.cpp ****         i++;
+ 148              		.loc 1 41 9
+  41:test/ConsumerProducer_C_API_test.cpp ****         i++;
+ 149              		.loc 1 41 33 is_stmt 0
+ 150 00e8 83A50400 		lw	a1,0(s1)
+  41:test/ConsumerProducer_C_API_test.cpp ****         i++;
+ 151              		.loc 1 41 26
+ 152 00ec 9B850503 		addiw	a1,a1,48
+ 153 00f0 03B58400 		ld	a0,8(s1)
+ 154 00f4 97000000 		call	_ZN6Buffer3putEi@plt
+ 154      E7800000 
+ 155              	.LVL17:
+  42:test/ConsumerProducer_C_API_test.cpp **** 
+ 156              		.loc 1 42 9 is_stmt 1
+  42:test/ConsumerProducer_C_API_test.cpp **** 
+ 157              		.loc 1 42 10 is_stmt 0
+ 158 00fc 1B071900 		addiw	a4,s2,1
+ 159 0100 1B090700 		sext.w	s2,a4
+GAS LISTING /tmp/ccGIBCON.s 			page 5
+
+
+ 160              	.LVL18:
+  44:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+ 161              		.loc 1 44 9 is_stmt 1
+  44:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+ 162              		.loc 1 44 29 is_stmt 0
+ 163 0104 83A60400 		lw	a3,0(s1)
+  44:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+ 164              		.loc 1 44 21
+ 165 0108 9B972600 		slliw	a5,a3,2
+ 166 010c BB87D700 		addw	a5,a5,a3
+ 167 0110 9B971700 		slliw	a5,a5,1
+  44:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+ 168              		.loc 1 44 15
+ 169 0114 BB67F702 		remw	a5,a4,a5
+  44:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+ 170              		.loc 1 44 9
+ 171 0118 E39207FC 		bnez	a5,.L8
+ 172 011c 6FF09FFB 		j	.L12
+ 173              	.LVL19:
+ 174              	.L9:
+  46:test/ConsumerProducer_C_API_test.cpp ****         }
+  47:test/ConsumerProducer_C_API_test.cpp ****     }
+  48:test/ConsumerProducer_C_API_test.cpp **** 
+  49:test/ConsumerProducer_C_API_test.cpp ****     sem_signal(data->wait);
+ 175              		.loc 1 49 5 is_stmt 1
+ 176              		.loc 1 49 15 is_stmt 0
+ 177 0120 03B50401 		ld	a0,16(s1)
+ 178 0124 97000000 		call	_Z10sem_signalP10KSemaphore@plt
+ 178      E7800000 
+ 179              	.LVL20:
+  50:test/ConsumerProducer_C_API_test.cpp **** }
+ 180              		.loc 1 50 1
+ 181 012c 83308101 		ld	ra,24(sp)
+ 182              		.cfi_restore 1
+ 183 0130 03340101 		ld	s0,16(sp)
+ 184              		.cfi_restore 8
+ 185              		.cfi_def_cfa 2, 32
+ 186 0134 83348100 		ld	s1,8(sp)
+ 187              		.cfi_restore 9
+ 188              	.LVL21:
+ 189 0138 03390100 		ld	s2,0(sp)
+ 190              		.cfi_restore 18
+ 191              	.LVL22:
+ 192 013c 13010102 		addi	sp,sp,32
+ 193              		.cfi_def_cfa_offset 0
+ 194 0140 67800000 		jr	ra
+ 195              		.cfi_endproc
+ 196              	.LFE1:
+ 198              		.align	2
+ 200              	_ZL8consumerPv:
+ 201              	.LFB2:
+  51:test/ConsumerProducer_C_API_test.cpp **** 
+  52:test/ConsumerProducer_C_API_test.cpp **** static void consumer(void *arg) {
+ 202              		.loc 1 52 33 is_stmt 1
+ 203              		.cfi_startproc
+ 204              	.LVL23:
+ 205 0144 130101FD 		addi	sp,sp,-48
+GAS LISTING /tmp/ccGIBCON.s 			page 6
+
+
+ 206              		.cfi_def_cfa_offset 48
+ 207 0148 23341102 		sd	ra,40(sp)
+ 208 014c 23308102 		sd	s0,32(sp)
+ 209 0150 233C9100 		sd	s1,24(sp)
+ 210 0154 23382101 		sd	s2,16(sp)
+ 211 0158 23343101 		sd	s3,8(sp)
+ 212              		.cfi_offset 1, -8
+ 213              		.cfi_offset 8, -16
+ 214              		.cfi_offset 9, -24
+ 215              		.cfi_offset 18, -32
+ 216              		.cfi_offset 19, -40
+ 217 015c 13040103 		addi	s0,sp,48
+ 218              		.cfi_def_cfa 8, 0
+ 219 0160 13090500 		mv	s2,a0
+  53:test/ConsumerProducer_C_API_test.cpp ****     struct thread_data *data = (struct thread_data *) arg;
+ 220              		.loc 1 53 5
+ 221              	.LVL24:
+  54:test/ConsumerProducer_C_API_test.cpp **** 
+  55:test/ConsumerProducer_C_API_test.cpp ****     int i = 0;
+ 222              		.loc 1 55 5
+ 223              		.loc 1 55 9 is_stmt 0
+ 224 0164 93090000 		li	s3,0
+ 225 0168 6F00C001 		j	.L14
+ 226              	.LVL25:
+ 227              	.L20:
+ 228              	.LBB2:
+  56:test/ConsumerProducer_C_API_test.cpp ****     while (!threadEnd) {
+  57:test/ConsumerProducer_C_API_test.cpp ****         int key = data->buffer->get();
+  58:test/ConsumerProducer_C_API_test.cpp ****         i++;
+  59:test/ConsumerProducer_C_API_test.cpp **** 
+  60:test/ConsumerProducer_C_API_test.cpp ****         __putc(key);
+  61:test/ConsumerProducer_C_API_test.cpp **** 
+  62:test/ConsumerProducer_C_API_test.cpp ****         if (i % (5 * data->id) == 0) {
+  63:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+ 229              		.loc 1 63 13 is_stmt 1
+ 230              		.loc 1 63 28 is_stmt 0
+ 231 016c 97000000 		call	_Z15thread_dispatchv@plt
+ 231      E7800000 
+ 232              	.LVL26:
+ 233 0174 6F000005 		j	.L16
+ 234              	.LVL27:
+ 235              	.L21:
+  64:test/ConsumerProducer_C_API_test.cpp ****         }
+  65:test/ConsumerProducer_C_API_test.cpp **** 
+  66:test/ConsumerProducer_C_API_test.cpp ****         if (i % 80 == 0) {
+  67:test/ConsumerProducer_C_API_test.cpp ****             __putc('\n');
+ 236              		.loc 1 67 13 is_stmt 1
+ 237              		.loc 1 67 19 is_stmt 0
+ 238 0178 1305A000 		li	a0,10
+ 239 017c 97000000 		call	__putc@plt
+ 239      E7800000 
+ 240              	.LVL28:
+ 241              	.L14:
+ 242              	.LBE2:
+  56:test/ConsumerProducer_C_API_test.cpp ****     while (!threadEnd) {
+ 243              		.loc 1 56 5 is_stmt 1
+  56:test/ConsumerProducer_C_API_test.cpp ****     while (!threadEnd) {
+GAS LISTING /tmp/ccGIBCON.s 			page 7
+
+
+ 244              		.loc 1 56 12
+ 245 0184 97070000 		lw	a5,.LANCHOR0
+ 245      83A70700 
+ 246 018c 63900706 		bnez	a5,.L15
+ 247              	.LBB3:
+  57:test/ConsumerProducer_C_API_test.cpp ****         i++;
+ 248              		.loc 1 57 9
+  57:test/ConsumerProducer_C_API_test.cpp ****         i++;
+ 249              		.loc 1 57 36 is_stmt 0
+ 250 0190 03358900 		ld	a0,8(s2)
+ 251 0194 97000000 		call	_ZN6Buffer3getEv@plt
+ 251      E7800000 
+ 252              	.LVL29:
+  58:test/ConsumerProducer_C_API_test.cpp **** 
+ 253              		.loc 1 58 9 is_stmt 1
+  58:test/ConsumerProducer_C_API_test.cpp **** 
+ 254              		.loc 1 58 10 is_stmt 0
+ 255 019c 9B841900 		addiw	s1,s3,1
+ 256 01a0 9B890400 		sext.w	s3,s1
+ 257              	.LVL30:
+  60:test/ConsumerProducer_C_API_test.cpp **** 
+ 258              		.loc 1 60 9 is_stmt 1
+  60:test/ConsumerProducer_C_API_test.cpp **** 
+ 259              		.loc 1 60 15 is_stmt 0
+ 260 01a4 1375F50F 		andi	a0,a0,0xff
+ 261              	.LVL31:
+ 262 01a8 97000000 		call	__putc@plt
+ 262      E7800000 
+ 263              	.LVL32:
+  62:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+ 264              		.loc 1 62 9 is_stmt 1
+  62:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+ 265              		.loc 1 62 28 is_stmt 0
+ 266 01b0 03270900 		lw	a4,0(s2)
+  62:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+ 267              		.loc 1 62 20
+ 268 01b4 9B172700 		slliw	a5,a4,2
+ 269 01b8 BB87E700 		addw	a5,a5,a4
+  62:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+ 270              		.loc 1 62 15
+ 271 01bc BBE7F402 		remw	a5,s1,a5
+  62:test/ConsumerProducer_C_API_test.cpp ****             thread_dispatch();
+ 272              		.loc 1 62 9
+ 273 01c0 E38607FA 		beqz	a5,.L20
+ 274              	.L16:
+  66:test/ConsumerProducer_C_API_test.cpp ****             __putc('\n');
+ 275              		.loc 1 66 9 is_stmt 1
+  66:test/ConsumerProducer_C_API_test.cpp ****             __putc('\n');
+ 276              		.loc 1 66 15 is_stmt 0
+ 277 01c4 93070005 		li	a5,80
+ 278 01c8 BBE4F402 		remw	s1,s1,a5
+ 279              	.LVL33:
+  66:test/ConsumerProducer_C_API_test.cpp ****             __putc('\n');
+ 280              		.loc 1 66 9
+ 281 01cc E39C04FA 		bnez	s1,.L14
+ 282 01d0 6FF09FFA 		j	.L21
+ 283              	.L22:
+GAS LISTING /tmp/ccGIBCON.s 			page 8
+
+
+ 284              	.LBE3:
+ 285              	.LBB4:
+  68:test/ConsumerProducer_C_API_test.cpp ****         }
+  69:test/ConsumerProducer_C_API_test.cpp ****     }
+  70:test/ConsumerProducer_C_API_test.cpp **** 
+  71:test/ConsumerProducer_C_API_test.cpp ****     while (data->buffer->getCnt() > 0) {
+  72:test/ConsumerProducer_C_API_test.cpp ****         int key = data->buffer->get();
+ 286              		.loc 1 72 9 is_stmt 1
+ 287              		.loc 1 72 36 is_stmt 0
+ 288 01d4 03358900 		ld	a0,8(s2)
+ 289 01d8 97000000 		call	_ZN6Buffer3getEv@plt
+ 289      E7800000 
+ 290              	.LVL34:
+  73:test/ConsumerProducer_C_API_test.cpp ****         __putc(key);
+ 291              		.loc 1 73 9 is_stmt 1
+ 292              		.loc 1 73 15 is_stmt 0
+ 293 01e0 1375F50F 		andi	a0,a0,0xff
+ 294              	.LVL35:
+ 295 01e4 97000000 		call	__putc@plt
+ 295      E7800000 
+ 296              	.LVL36:
+ 297              	.L15:
+ 298              	.LBE4:
+  71:test/ConsumerProducer_C_API_test.cpp ****         int key = data->buffer->get();
+ 299              		.loc 1 71 5 is_stmt 1
+  71:test/ConsumerProducer_C_API_test.cpp ****         int key = data->buffer->get();
+ 300              		.loc 1 71 35
+  71:test/ConsumerProducer_C_API_test.cpp ****         int key = data->buffer->get();
+ 301              		.loc 1 71 32 is_stmt 0
+ 302 01ec 03358900 		ld	a0,8(s2)
+ 303 01f0 97000000 		call	_ZN6Buffer6getCntEv@plt
+ 303      E7800000 
+ 304              	.LVL37:
+  71:test/ConsumerProducer_C_API_test.cpp ****         int key = data->buffer->get();
+ 305              		.loc 1 71 35
+ 306 01f8 E34EA0FC 		bgtz	a0,.L22
+  74:test/ConsumerProducer_C_API_test.cpp ****     }
+  75:test/ConsumerProducer_C_API_test.cpp **** 
+  76:test/ConsumerProducer_C_API_test.cpp ****     sem_signal(data->wait);
+ 307              		.loc 1 76 5 is_stmt 1
+ 308              		.loc 1 76 15 is_stmt 0
+ 309 01fc 03350901 		ld	a0,16(s2)
+ 310 0200 97000000 		call	_Z10sem_signalP10KSemaphore@plt
+ 310      E7800000 
+ 311              	.LVL38:
+  77:test/ConsumerProducer_C_API_test.cpp **** }
+ 312              		.loc 1 77 1
+ 313 0208 83308102 		ld	ra,40(sp)
+ 314              		.cfi_restore 1
+ 315 020c 03340102 		ld	s0,32(sp)
+ 316              		.cfi_restore 8
+ 317              		.cfi_def_cfa 2, 48
+ 318 0210 83348101 		ld	s1,24(sp)
+ 319              		.cfi_restore 9
+ 320 0214 03390101 		ld	s2,16(sp)
+ 321              		.cfi_restore 18
+ 322              	.LVL39:
+GAS LISTING /tmp/ccGIBCON.s 			page 9
+
+
+ 323 0218 83398100 		ld	s3,8(sp)
+ 324              		.cfi_restore 19
+ 325              	.LVL40:
+ 326 021c 13010103 		addi	sp,sp,48
+ 327              		.cfi_def_cfa_offset 0
+ 328 0220 67800000 		jr	ra
+ 329              		.cfi_endproc
+ 330              	.LFE2:
+ 332              		.section	.rodata.str1.8,"aMS",@progbits,1
+ 333              		.align	3
+ 334              	.LC0:
+ 335 0000 556E6573 		.string	"Unesite broj proizvodjaca?\n"
+ 335      69746520 
+ 335      62726F6A 
+ 335      2070726F 
+ 335      697A766F 
+ 336 001c 00000000 		.align	3
+ 337              	.LC1:
+ 338 0020 556E6573 		.string	"Unesite velicinu bafera?\n"
+ 338      69746520 
+ 338      76656C69 
+ 338      63696E75 
+ 338      20626166 
+ 339 003a 00000000 		.align	3
+ 339      0000
+ 340              	.LC2:
+ 341 0040 42726F6A 		.string	"Broj proizvodjaca "
+ 341      2070726F 
+ 341      697A766F 
+ 341      646A6163 
+ 341      612000
+ 342 0053 00000000 		.align	3
+ 342      00
+ 343              	.LC3:
+ 344 0058 20692076 		.string	" i velicina bafera "
+ 344      656C6963 
+ 344      696E6120 
+ 344      62616665 
+ 344      72612000 
+ 345 006c 00000000 		.align	3
+ 346              	.LC4:
+ 347 0070 2E0A00   		.string	".\n"
+ 348              		.text
+ 349              		.align	2
+ 350              		.globl	_Z22producerConsumer_C_APIv
+ 352              	_Z22producerConsumer_C_APIv:
+ 353              	.LFB3:
+  78:test/ConsumerProducer_C_API_test.cpp **** 
+  79:test/ConsumerProducer_C_API_test.cpp **** void producerConsumer_C_API() {
+ 354              		.loc 1 79 31 is_stmt 1
+ 355              		.cfi_startproc
+ 356              		.cfi_personality 0x9b,DW.ref.__gxx_personality_v0
+ 357              		.cfi_lsda 0x1b,.LLSDA3
+ 358 0224 130101F7 		addi	sp,sp,-144
+ 359              		.cfi_def_cfa_offset 144
+ 360 0228 23341108 		sd	ra,136(sp)
+ 361 022c 23308108 		sd	s0,128(sp)
+GAS LISTING /tmp/ccGIBCON.s 			page 10
+
+
+ 362 0230 233C9106 		sd	s1,120(sp)
+ 363 0234 23382107 		sd	s2,112(sp)
+ 364 0238 23343107 		sd	s3,104(sp)
+ 365              		.cfi_offset 1, -8
+ 366              		.cfi_offset 8, -16
+ 367              		.cfi_offset 9, -24
+ 368              		.cfi_offset 18, -32
+ 369              		.cfi_offset 19, -40
+ 370 023c 13040109 		addi	s0,sp,144
+ 371              		.cfi_def_cfa 8, 0
+  80:test/ConsumerProducer_C_API_test.cpp ****     // char input[30];
+  81:test/ConsumerProducer_C_API_test.cpp ****     int n, threadNum;
+ 372              		.loc 1 81 5
+  82:test/ConsumerProducer_C_API_test.cpp **** 
+  83:test/ConsumerProducer_C_API_test.cpp ****     printString("Unesite broj proizvodjaca?\n");
+ 373              		.loc 1 83 5
+ 374              		.loc 1 83 16 is_stmt 0
+ 375 0240 17050000 		lla	a0,.LC0
+ 375      13050500 
+ 376              	.LEHB0:
+ 377 0248 97000000 		call	_Z11printStringPKc@plt
+ 377      E7800000 
+ 378              	.LVL41:
+  84:test/ConsumerProducer_C_API_test.cpp ****     // getString(input, 30);
+  85:test/ConsumerProducer_C_API_test.cpp ****     // threadNum = stringToInt(input);
+  86:test/ConsumerProducer_C_API_test.cpp ****     threadNum = 10;
+ 379              		.loc 1 86 5 is_stmt 1
+  87:test/ConsumerProducer_C_API_test.cpp **** 
+  88:test/ConsumerProducer_C_API_test.cpp ****     printString("Unesite velicinu bafera?\n");
+ 380              		.loc 1 88 5
+ 381              		.loc 1 88 16 is_stmt 0
+ 382 0250 17050000 		lla	a0,.LC1
+ 382      13050500 
+ 383 0258 97000000 		call	_Z11printStringPKc@plt
+ 383      E7800000 
+ 384              	.LVL42:
+  89:test/ConsumerProducer_C_API_test.cpp ****     // getString(input, 30);
+  90:test/ConsumerProducer_C_API_test.cpp ****     // n = stringToInt(input);
+  91:test/ConsumerProducer_C_API_test.cpp ****     n = 30;
+ 385              		.loc 1 91 5 is_stmt 1
+  92:test/ConsumerProducer_C_API_test.cpp **** 
+  93:test/ConsumerProducer_C_API_test.cpp ****     printString("Broj proizvodjaca "); printInt(threadNum);
+ 386              		.loc 1 93 5
+ 387              		.loc 1 93 16 is_stmt 0
+ 388 0260 17050000 		lla	a0,.LC2
+ 388      13050500 
+ 389 0268 97000000 		call	_Z11printStringPKc@plt
+ 389      E7800000 
+ 390              	.LVL43:
+ 391              		.loc 1 93 40 is_stmt 1
+ 392              		.loc 1 93 48 is_stmt 0
+ 393 0270 13060000 		li	a2,0
+ 394 0274 9305A000 		li	a1,10
+ 395 0278 1305A000 		li	a0,10
+ 396 027c 97000000 		call	_Z8printIntiii@plt
+ 396      E7800000 
+ 397              	.LVL44:
+GAS LISTING /tmp/ccGIBCON.s 			page 11
+
+
+  94:test/ConsumerProducer_C_API_test.cpp ****     printString(" i velicina bafera "); printInt(n);
+ 398              		.loc 1 94 5 is_stmt 1
+ 399              		.loc 1 94 16 is_stmt 0
+ 400 0284 17050000 		lla	a0,.LC3
+ 400      13050500 
+ 401 028c 97000000 		call	_Z11printStringPKc@plt
+ 401      E7800000 
+ 402              	.LVL45:
+ 403              		.loc 1 94 41 is_stmt 1
+ 404              		.loc 1 94 49 is_stmt 0
+ 405 0294 13060000 		li	a2,0
+ 406 0298 9305A000 		li	a1,10
+ 407 029c 1305E001 		li	a0,30
+ 408 02a0 97000000 		call	_Z8printIntiii@plt
+ 408      E7800000 
+ 409              	.LVL46:
+  95:test/ConsumerProducer_C_API_test.cpp ****     printString(".\n");
+ 410              		.loc 1 95 5 is_stmt 1
+ 411              		.loc 1 95 16 is_stmt 0
+ 412 02a8 17050000 		lla	a0,.LC4
+ 412      13050500 
+ 413 02b0 97000000 		call	_Z11printStringPKc@plt
+ 413      E7800000 
+ 414              	.LVL47:
+  96:test/ConsumerProducer_C_API_test.cpp **** 
+  97:test/ConsumerProducer_C_API_test.cpp ****     if(threadNum > n) {
+ 415              		.loc 1 97 5 is_stmt 1
+  98:test/ConsumerProducer_C_API_test.cpp ****         printString("Broj proizvodjaca ne sme biti manji od velicine bafera!\n");
+  99:test/ConsumerProducer_C_API_test.cpp ****         return;
+ 100:test/ConsumerProducer_C_API_test.cpp ****     } else if (threadNum < 1) {
+ 416              		.loc 1 100 12
+ 101:test/ConsumerProducer_C_API_test.cpp ****         printString("Broj proizvodjaca mora biti veci od nula!\n");
+ 102:test/ConsumerProducer_C_API_test.cpp ****         return;
+ 103:test/ConsumerProducer_C_API_test.cpp ****     }
+ 104:test/ConsumerProducer_C_API_test.cpp **** 
+ 105:test/ConsumerProducer_C_API_test.cpp ****     Buffer *buffer = new Buffer(n);
+ 417              		.loc 1 105 5
+ 418              		.loc 1 105 34 is_stmt 0
+ 419 02b8 13058003 		li	a0,56
+ 420 02bc 97000000 		call	_Znwm@plt
+ 420      E7800000 
+ 421              	.LVL48:
+ 422              	.LEHE0:
+ 423 02c4 93090500 		mv	s3,a0
+ 424 02c8 9305E001 		li	a1,30
+ 425              	.LEHB1:
+ 426 02cc 97000000 		call	_ZN6BufferC1Ei@plt
+ 426      E7800000 
+ 427              	.LVL49:
+ 428              	.LEHE1:
+ 106:test/ConsumerProducer_C_API_test.cpp **** 
+ 107:test/ConsumerProducer_C_API_test.cpp ****     sem_open(&waitForAll, 0);
+ 429              		.loc 1 107 5 is_stmt 1 discriminator 3
+ 430              		.loc 1 107 13 is_stmt 0 discriminator 3
+ 431 02d4 93050000 		li	a1,0
+ 432 02d8 17050000 		lla	a0,.LANCHOR0+8
+ 432      13050500 
+GAS LISTING /tmp/ccGIBCON.s 			page 12
+
+
+ 433              	.LEHB2:
+ 434 02e0 97000000 		call	_Z8sem_openPP10KSemaphorej@plt
+ 434      E7800000 
+ 435              	.LVL50:
+ 108:test/ConsumerProducer_C_API_test.cpp **** 
+ 109:test/ConsumerProducer_C_API_test.cpp ****     thread_t threads[threadNum];
+ 436              		.loc 1 109 5 is_stmt 1 discriminator 3
+ 110:test/ConsumerProducer_C_API_test.cpp ****     thread_t consumerThread;
+ 437              		.loc 1 110 5 discriminator 3
+ 111:test/ConsumerProducer_C_API_test.cpp **** 
+ 112:test/ConsumerProducer_C_API_test.cpp ****     struct thread_data data[threadNum + 1];
+ 438              		.loc 1 112 5 discriminator 3
+ 439              		.loc 1 112 24 is_stmt 0 discriminator 3
+ 440 02e8 130101EF 		addi	sp,sp,-272
+ 441 02ec 13090100 		mv	s2,sp
+ 442              	.LVL51:
+ 113:test/ConsumerProducer_C_API_test.cpp **** 
+ 114:test/ConsumerProducer_C_API_test.cpp ****     data[threadNum].id = threadNum;
+ 443              		.loc 1 114 5 is_stmt 1 discriminator 3
+ 444              		.loc 1 114 24 is_stmt 0 discriminator 3
+ 445 02f0 9307A000 		li	a5,10
+ 446 02f4 2328F90E 		sw	a5,240(s2)
+ 115:test/ConsumerProducer_C_API_test.cpp ****     data[threadNum].buffer = buffer;
+ 447              		.loc 1 115 5 is_stmt 1 discriminator 3
+ 448              		.loc 1 115 28 is_stmt 0 discriminator 3
+ 449 02f8 233C390F 		sd	s3,248(s2)
+ 116:test/ConsumerProducer_C_API_test.cpp ****     data[threadNum].wait = waitForAll;
+ 450              		.loc 1 116 5 is_stmt 1 discriminator 3
+ 451              		.loc 1 116 26 is_stmt 0 discriminator 3
+ 452 02fc 97070000 		ld	a5,.LANCHOR0+8
+ 452      83B70700 
+ 453 0304 2330F910 		sd	a5,256(s2)
+ 117:test/ConsumerProducer_C_API_test.cpp ****     thread_create(&consumerThread, consumer, data + threadNum);
+ 454              		.loc 1 117 5 is_stmt 1 discriminator 3
+ 455              		.loc 1 117 18 is_stmt 0 discriminator 3
+ 456 0308 1306090F 		addi	a2,s2,240
+ 457 030c 97050000 		lla	a1,_ZL8consumerPv
+ 457      93850500 
+ 458 0314 130584FC 		addi	a0,s0,-56
+ 459 0318 97000000 		call	_Z13thread_createPP7KThreadPFvPvES2_@plt
+ 459      E7800000 
+ 460              	.LVL52:
+ 461              	.LBB5:
+ 118:test/ConsumerProducer_C_API_test.cpp **** 
+ 119:test/ConsumerProducer_C_API_test.cpp ****     for (int i = 0; i < threadNum; i++) {
+ 462              		.loc 1 119 14 discriminator 3
+ 463 0320 93040000 		li	s1,0
+ 464              	.L26:
+ 465              	.LVL53:
+ 466              		.loc 1 119 23 is_stmt 1 discriminator 1
+ 467 0324 93079000 		li	a5,9
+ 468 0328 63C89706 		bgt	s1,a5,.L24
+ 120:test/ConsumerProducer_C_API_test.cpp ****         data[i].id = i;
+ 469              		.loc 1 120 9
+ 470              		.loc 1 120 20 is_stmt 0
+ 471 032c 93971400 		slli	a5,s1,1
+ 472 0330 B3879700 		add	a5,a5,s1
+GAS LISTING /tmp/ccGIBCON.s 			page 13
+
+
+ 473 0334 93973700 		slli	a5,a5,3
+ 474 0338 B307F900 		add	a5,s2,a5
+ 475 033c 23A09700 		sw	s1,0(a5)
+ 121:test/ConsumerProducer_C_API_test.cpp ****         data[i].buffer = buffer;
+ 476              		.loc 1 121 9 is_stmt 1
+ 477              		.loc 1 121 24 is_stmt 0
+ 478 0340 23B43701 		sd	s3,8(a5)
+ 122:test/ConsumerProducer_C_API_test.cpp ****         data[i].wait = waitForAll;
+ 479              		.loc 1 122 9 is_stmt 1
+ 480              		.loc 1 122 22 is_stmt 0
+ 481 0344 17070000 		ld	a4,.LANCHOR0+8
+ 481      03370700 
+ 482 034c 23B8E700 		sd	a4,16(a5)
+ 123:test/ConsumerProducer_C_API_test.cpp **** 
+ 124:test/ConsumerProducer_C_API_test.cpp ****         thread_create(threads + i,
+ 483              		.loc 1 124 9 is_stmt 1
+ 484              		.loc 1 124 33 is_stmt 0
+ 485 0350 13870400 		mv	a4,s1
+ 486              		.loc 1 124 31
+ 487 0354 13953400 		slli	a0,s1,3
+ 488              		.loc 1 124 22
+ 489 0358 930784F7 		addi	a5,s0,-136
+ 490              	.LVL54:
+ 491 035c 3385A700 		add	a0,a5,a0
+ 492 0360 63569002 		blez	s1,.L31
+ 493 0364 97050000 		lla	a1,_ZL8producerPv
+ 493      93850500 
+ 494              	.L25:
+ 125:test/ConsumerProducer_C_API_test.cpp ****                       i > 0 ? producer : producerKeyboard,
+ 126:test/ConsumerProducer_C_API_test.cpp ****                       data + i);
+ 495              		.loc 1 126 28 discriminator 4
+ 496 036c 13161700 		slli	a2,a4,1
+ 497 0370 3306E600 		add	a2,a2,a4
+ 498 0374 13163600 		slli	a2,a2,3
+ 124:test/ConsumerProducer_C_API_test.cpp ****                       i > 0 ? producer : producerKeyboard,
+ 499              		.loc 1 124 22 discriminator 4
+ 500 0378 3306C900 		add	a2,s2,a2
+ 501 037c 97000000 		call	_Z13thread_createPP7KThreadPFvPvES2_@plt
+ 501      E7800000 
+ 502              	.LVL55:
+ 119:test/ConsumerProducer_C_API_test.cpp ****         data[i].id = i;
+ 503              		.loc 1 119 5 is_stmt 1 discriminator 4
+ 504 0384 9B841400 		addiw	s1,s1,1
+ 505              	.LVL56:
+ 506 0388 6FF0DFF9 		j	.L26
+ 507              	.LVL57:
+ 508              	.L31:
+ 124:test/ConsumerProducer_C_API_test.cpp ****                       i > 0 ? producer : producerKeyboard,
+ 509              		.loc 1 124 22 is_stmt 0
+ 510 038c 97050000 		lla	a1,_ZL16producerKeyboardPv
+ 510      93850500 
+ 511 0394 6FF09FFD 		j	.L25
+ 512              	.LVL58:
+ 513              	.L24:
+ 514              	.LBE5:
+ 127:test/ConsumerProducer_C_API_test.cpp ****     }
+ 128:test/ConsumerProducer_C_API_test.cpp **** 
+GAS LISTING /tmp/ccGIBCON.s 			page 14
+
+
+ 129:test/ConsumerProducer_C_API_test.cpp ****     thread_dispatch();
+ 515              		.loc 1 129 5 is_stmt 1
+ 516              		.loc 1 129 20 is_stmt 0
+ 517 0398 97000000 		call	_Z15thread_dispatchv@plt
+ 517      E7800000 
+ 518              	.LVL59:
+ 519              	.LBB6:
+ 130:test/ConsumerProducer_C_API_test.cpp **** 
+ 131:test/ConsumerProducer_C_API_test.cpp ****     for (int i = 0; i <= threadNum; i++) {
+ 520              		.loc 1 131 14
+ 521 03a0 93040000 		li	s1,0
+ 522              	.LVL60:
+ 523 03a4 6F008001 		j	.L28
+ 524              	.LVL61:
+ 525              	.L34:
+ 132:test/ConsumerProducer_C_API_test.cpp ****         sem_wait(waitForAll);
+ 526              		.loc 1 132 9 is_stmt 1
+ 527              		.loc 1 132 17 is_stmt 0
+ 528 03a8 17050000 		ld	a0,.LANCHOR0+8
+ 528      03350500 
+ 529 03b0 97000000 		call	_Z8sem_waitP10KSemaphore@plt
+ 529      E7800000 
+ 530              	.LVL62:
+ 131:test/ConsumerProducer_C_API_test.cpp ****         sem_wait(waitForAll);
+ 531              		.loc 1 131 5 is_stmt 1
+ 532 03b8 9B841400 		addiw	s1,s1,1
+ 533              	.LVL63:
+ 534              	.L28:
+ 131:test/ConsumerProducer_C_API_test.cpp ****         sem_wait(waitForAll);
+ 535              		.loc 1 131 23 discriminator 1
+ 536 03bc 9307A000 		li	a5,10
+ 537 03c0 E3D497FE 		ble	s1,a5,.L34
+ 538              	.LBE6:
+ 133:test/ConsumerProducer_C_API_test.cpp ****     }
+ 134:test/ConsumerProducer_C_API_test.cpp **** 
+ 135:test/ConsumerProducer_C_API_test.cpp ****     sem_close(waitForAll);
+ 539              		.loc 1 135 5
+ 540              		.loc 1 135 14 is_stmt 0
+ 541 03c4 17050000 		ld	a0,.LANCHOR0+8
+ 541      03350500 
+ 542 03cc 97000000 		call	_Z9sem_closeP10KSemaphore@plt
+ 542      E7800000 
+ 543              	.LVL64:
+ 136:test/ConsumerProducer_C_API_test.cpp **** 
+ 137:test/ConsumerProducer_C_API_test.cpp ****     delete buffer;
+ 544              		.loc 1 137 5 is_stmt 1
+ 545              		.loc 1 137 18 is_stmt 0
+ 546 03d4 638E0900 		beqz	s3,.L23
+ 547              		.loc 1 137 12 discriminator 1
+ 548 03d8 13850900 		mv	a0,s3
+ 549 03dc 97000000 		call	_ZN6BufferD1Ev@plt
+ 549      E7800000 
+ 550              	.LVL65:
+ 551 03e4 13850900 		mv	a0,s3
+ 552 03e8 97000000 		call	_ZdlPv@plt
+ 552      E7800000 
+ 553              	.LVL66:
+GAS LISTING /tmp/ccGIBCON.s 			page 15
+
+
+ 554              	.L23:
+ 138:test/ConsumerProducer_C_API_test.cpp **** 
+ 139:test/ConsumerProducer_C_API_test.cpp **** }
+ 555              		.loc 1 139 1
+ 556 03f0 130104F7 		addi	sp,s0,-144
+ 557              		.cfi_remember_state
+ 558              		.cfi_def_cfa 2, 144
+ 559              	.LVL67:
+ 560 03f4 83308108 		ld	ra,136(sp)
+ 561              		.cfi_restore 1
+ 562 03f8 03340108 		ld	s0,128(sp)
+ 563              		.cfi_restore 8
+ 564              	.LVL68:
+ 565 03fc 83348107 		ld	s1,120(sp)
+ 566              		.cfi_restore 9
+ 567              	.LVL69:
+ 568 0400 03390107 		ld	s2,112(sp)
+ 569              		.cfi_restore 18
+ 570              	.LVL70:
+ 571 0404 83398106 		ld	s3,104(sp)
+ 572              		.cfi_restore 19
+ 573              	.LVL71:
+ 574 0408 13010109 		addi	sp,sp,144
+ 575              		.cfi_def_cfa_offset 0
+ 576              	.LVL72:
+ 577 040c 67800000 		jr	ra
+ 578              	.LVL73:
+ 579              	.L32:
+ 580              		.cfi_restore_state
+ 581 0410 93040500 		mv	s1,a0
+ 105:test/ConsumerProducer_C_API_test.cpp **** 
+ 582              		.loc 1 105 34
+ 583 0414 13850900 		mv	a0,s3
+ 584 0418 97000000 		call	_ZdlPv@plt
+ 584      E7800000 
+ 585              	.LVL74:
+ 586 0420 13850400 		mv	a0,s1
+ 587 0424 97000000 		call	_Unwind_Resume@plt
+ 587      E7800000 
+ 588              	.LVL75:
+ 589              	.LEHE2:
+ 590              		.cfi_endproc
+ 591              	.LFE3:
+ 592              		.globl	__gxx_personality_v0
+ 593              		.section	.gcc_except_table,"a",@progbits
+ 594              	.LLSDA3:
+ 595 0000 FF       		.byte	0xff
+ 596 0001 FF       		.byte	0xff
+ 597 0002 03       		.byte	0x3
+ 598 0003 27       		.byte	0x27
+ 599 0004 00000000 		.4byte	.LEHB0-.LFB3
+ 600 0008 00000000 		.4byte	.LEHE0-.LEHB0
+ 601 000c 00000000 		.4byte	0
+ 602 0010 00       		.byte	0
+ 603 0011 00000000 		.4byte	.LEHB1-.LFB3
+ 604 0015 00000000 		.4byte	.LEHE1-.LEHB1
+ 605 0019 00000000 		.4byte	.L32-.LFB3
+GAS LISTING /tmp/ccGIBCON.s 			page 16
+
+
+ 606 001d 00       		.byte	0
+ 607 001e 00000000 		.4byte	.LEHB2-.LFB3
+ 608 0022 00000000 		.4byte	.LEHE2-.LEHB2
+ 609 0026 00000000 		.4byte	0
+ 610 002a 00       		.byte	0
+ 611              		.text
+ 613              		.bss
+ 614              		.align	3
+ 615              		.set	.LANCHOR0,. + 0
+ 618              	_ZL9threadEnd:
+ 619 0000 00000000 		.zero	4
+ 620 0004 00000000 		.zero	4
+ 623              	_ZL10waitForAll:
+ 624 0008 00000000 		.zero	8
+ 624      00000000 
+ 625              		.text
+ 626              	.Letext0:
+ 627              		.file 2 "test/../h/../lib/hw.h"
+ 628              		.file 3 "test/../h/syscall_c.hpp"
+ 629              		.file 4 "test/buffer.hpp"
+ 630              		.file 5 "test/printing.hpp"
+ 631              		.file 6 "test/../lib/console.h"
+ 2614              		.align	3
+ 2617              	DW.ref.__gxx_personality_v0:
+ 2618 0000 00000000 		.dword	__gxx_personality_v0
+ 2618      00000000 
+ 2619              		.ident	"GCC: (Ubuntu 9.4.0-1ubuntu1~20.04) 9.4.0"
+ 2620              		.section	.note.GNU-stack,"",@progbits
+GAS LISTING /tmp/ccGIBCON.s 			page 17
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 ConsumerProducer_C_API_test.cpp
+     /tmp/ccGIBCON.s:8      .text:0000000000000000 _ZL16producerKeyboardPv
+     /tmp/ccGIBCON.s:12     .text:0000000000000000 .L0 
+     /tmp/ccGIBCON.s:14     .text:0000000000000000 .L0 
+     /tmp/ccGIBCON.s:15     .text:0000000000000004 .L0 
+     /tmp/ccGIBCON.s:21     .text:0000000000000018 .L0 
+     /tmp/ccGIBCON.s:22     .text:0000000000000018 .L0 
+     /tmp/ccGIBCON.s:23     .text:0000000000000018 .L0 
+     /tmp/ccGIBCON.s:24     .text:0000000000000018 .L0 
+     /tmp/ccGIBCON.s:25     .text:0000000000000018 .L0 
+     /tmp/ccGIBCON.s:27     .text:000000000000001c .L0 
+     /tmp/ccGIBCON.s:31     .text:0000000000000020 .L0 
+     /tmp/ccGIBCON.s:32     .text:0000000000000020 .L0 
+     /tmp/ccGIBCON.s:33     .text:0000000000000020 .L0 
+     /tmp/ccGIBCON.s:34     .text:0000000000000020 .L0 
+     /tmp/ccGIBCON.s:39     .text:0000000000000028 .L0 
+     /tmp/ccGIBCON.s:40     .text:0000000000000028 .L0 
+     /tmp/ccGIBCON.s:44     .text:0000000000000030 .L0 
+     /tmp/ccGIBCON.s:48     .text:0000000000000034 .L0 
+     /tmp/ccGIBCON.s:49     .text:0000000000000034 .L0 
+     /tmp/ccGIBCON.s:52     .text:000000000000003c .L0 
+     /tmp/ccGIBCON.s:53     .text:000000000000003c .L0 
+     /tmp/ccGIBCON.s:56     .text:0000000000000040 .L0 
+     /tmp/ccGIBCON.s:57     .text:0000000000000040 .L0 
+     /tmp/ccGIBCON.s:62     .text:0000000000000050 .L0 
+     /tmp/ccGIBCON.s:63     .text:0000000000000050 .L0 
+     /tmp/ccGIBCON.s:65     .text:0000000000000054 .L0 
+     /tmp/ccGIBCON.s:69     .text:0000000000000060 .L0 
+     /tmp/ccGIBCON.s:72     .text:0000000000000064 .L0 
+     /tmp/ccGIBCON.s:77     .text:000000000000006c .L0 
+     /tmp/ccGIBCON.s:78     .text:000000000000006c .L0 
+     /tmp/ccGIBCON.s:81     .text:0000000000000078 .L0 
+     /tmp/ccGIBCON.s:82     .text:0000000000000078 .L0 
+     /tmp/ccGIBCON.s:87     .text:0000000000000088 .L0 
+     /tmp/ccGIBCON.s:88     .text:0000000000000088 .L0 
+     /tmp/ccGIBCON.s:92     .text:0000000000000094 .L0 
+     /tmp/ccGIBCON.s:93     .text:0000000000000098 .L0 
+     /tmp/ccGIBCON.s:95     .text:000000000000009c .L0 
+     /tmp/ccGIBCON.s:96     .text:000000000000009c .L0 
+     /tmp/ccGIBCON.s:98     .text:00000000000000a0 .L0 
+     /tmp/ccGIBCON.s:101    .text:00000000000000a4 .L0 
+     /tmp/ccGIBCON.s:103    .text:00000000000000a8 .L0 
+     /tmp/ccGIBCON.s:106    .text:00000000000000ac .L0 
+     /tmp/ccGIBCON.s:108    .text:00000000000000b0 .L0 
+     /tmp/ccGIBCON.s:113    .text:00000000000000b0 _ZL8producerPv
+     /tmp/ccGIBCON.s:116    .text:00000000000000b0 .L0 
+     /tmp/ccGIBCON.s:118    .text:00000000000000b0 .L0 
+     /tmp/ccGIBCON.s:119    .text:00000000000000b4 .L0 
+     /tmp/ccGIBCON.s:124    .text:00000000000000c4 .L0 
+     /tmp/ccGIBCON.s:125    .text:00000000000000c4 .L0 
+     /tmp/ccGIBCON.s:126    .text:00000000000000c4 .L0 
+     /tmp/ccGIBCON.s:127    .text:00000000000000c4 .L0 
+     /tmp/ccGIBCON.s:129    .text:00000000000000c8 .L0 
+     /tmp/ccGIBCON.s:133    .text:00000000000000cc .L0 
+     /tmp/ccGIBCON.s:134    .text:00000000000000cc .L0 
+     /tmp/ccGIBCON.s:135    .text:00000000000000cc .L0 
+GAS LISTING /tmp/ccGIBCON.s 			page 18
+
+
+     /tmp/ccGIBCON.s:140    .text:00000000000000d4 .L0 
+     /tmp/ccGIBCON.s:141    .text:00000000000000d4 .L0 
+     /tmp/ccGIBCON.s:145    .text:00000000000000dc .L0 
+     /tmp/ccGIBCON.s:146    .text:00000000000000dc .L0 
+     /tmp/ccGIBCON.s:149    .text:00000000000000e8 .L0 
+     /tmp/ccGIBCON.s:150    .text:00000000000000e8 .L0 
+     /tmp/ccGIBCON.s:152    .text:00000000000000ec .L0 
+     /tmp/ccGIBCON.s:157    .text:00000000000000fc .L0 
+     /tmp/ccGIBCON.s:158    .text:00000000000000fc .L0 
+     /tmp/ccGIBCON.s:162    .text:0000000000000104 .L0 
+     /tmp/ccGIBCON.s:163    .text:0000000000000104 .L0 
+     /tmp/ccGIBCON.s:165    .text:0000000000000108 .L0 
+     /tmp/ccGIBCON.s:169    .text:0000000000000114 .L0 
+     /tmp/ccGIBCON.s:171    .text:0000000000000118 .L0 
+     /tmp/ccGIBCON.s:176    .text:0000000000000120 .L0 
+     /tmp/ccGIBCON.s:177    .text:0000000000000120 .L0 
+     /tmp/ccGIBCON.s:181    .text:000000000000012c .L0 
+     /tmp/ccGIBCON.s:182    .text:0000000000000130 .L0 
+     /tmp/ccGIBCON.s:184    .text:0000000000000134 .L0 
+     /tmp/ccGIBCON.s:185    .text:0000000000000134 .L0 
+     /tmp/ccGIBCON.s:187    .text:0000000000000138 .L0 
+     /tmp/ccGIBCON.s:190    .text:000000000000013c .L0 
+     /tmp/ccGIBCON.s:193    .text:0000000000000140 .L0 
+     /tmp/ccGIBCON.s:195    .text:0000000000000144 .L0 
+     /tmp/ccGIBCON.s:200    .text:0000000000000144 _ZL8consumerPv
+     /tmp/ccGIBCON.s:203    .text:0000000000000144 .L0 
+     /tmp/ccGIBCON.s:205    .text:0000000000000144 .L0 
+     /tmp/ccGIBCON.s:206    .text:0000000000000148 .L0 
+     /tmp/ccGIBCON.s:212    .text:000000000000015c .L0 
+     /tmp/ccGIBCON.s:213    .text:000000000000015c .L0 
+     /tmp/ccGIBCON.s:214    .text:000000000000015c .L0 
+     /tmp/ccGIBCON.s:215    .text:000000000000015c .L0 
+     /tmp/ccGIBCON.s:216    .text:000000000000015c .L0 
+     /tmp/ccGIBCON.s:218    .text:0000000000000160 .L0 
+     /tmp/ccGIBCON.s:222    .text:0000000000000164 .L0 
+     /tmp/ccGIBCON.s:223    .text:0000000000000164 .L0 
+     /tmp/ccGIBCON.s:224    .text:0000000000000164 .L0 
+     /tmp/ccGIBCON.s:230    .text:000000000000016c .L0 
+     /tmp/ccGIBCON.s:231    .text:000000000000016c .L0 
+     /tmp/ccGIBCON.s:237    .text:0000000000000178 .L0 
+     /tmp/ccGIBCON.s:238    .text:0000000000000178 .L0 
+     /tmp/ccGIBCON.s:244    .text:0000000000000184 .L0 
+     /tmp/ccGIBCON.s:245    .text:0000000000000184 .L0 
+     /tmp/ccGIBCON.s:249    .text:0000000000000190 .L0 
+     /tmp/ccGIBCON.s:250    .text:0000000000000190 .L0 
+     /tmp/ccGIBCON.s:254    .text:000000000000019c .L0 
+     /tmp/ccGIBCON.s:255    .text:000000000000019c .L0 
+     /tmp/ccGIBCON.s:259    .text:00000000000001a4 .L0 
+     /tmp/ccGIBCON.s:260    .text:00000000000001a4 .L0 
+     /tmp/ccGIBCON.s:265    .text:00000000000001b0 .L0 
+     /tmp/ccGIBCON.s:266    .text:00000000000001b0 .L0 
+     /tmp/ccGIBCON.s:268    .text:00000000000001b4 .L0 
+     /tmp/ccGIBCON.s:271    .text:00000000000001bc .L0 
+     /tmp/ccGIBCON.s:273    .text:00000000000001c0 .L0 
+     /tmp/ccGIBCON.s:276    .text:00000000000001c4 .L0 
+     /tmp/ccGIBCON.s:277    .text:00000000000001c4 .L0 
+     /tmp/ccGIBCON.s:281    .text:00000000000001cc .L0 
+GAS LISTING /tmp/ccGIBCON.s 			page 19
+
+
+     /tmp/ccGIBCON.s:287    .text:00000000000001d4 .L0 
+     /tmp/ccGIBCON.s:288    .text:00000000000001d4 .L0 
+     /tmp/ccGIBCON.s:292    .text:00000000000001e0 .L0 
+     /tmp/ccGIBCON.s:293    .text:00000000000001e0 .L0 
+     /tmp/ccGIBCON.s:300    .text:00000000000001ec .L0 
+     /tmp/ccGIBCON.s:301    .text:00000000000001ec .L0 
+     /tmp/ccGIBCON.s:302    .text:00000000000001ec .L0 
+     /tmp/ccGIBCON.s:306    .text:00000000000001f8 .L0 
+     /tmp/ccGIBCON.s:308    .text:00000000000001fc .L0 
+     /tmp/ccGIBCON.s:309    .text:00000000000001fc .L0 
+     /tmp/ccGIBCON.s:313    .text:0000000000000208 .L0 
+     /tmp/ccGIBCON.s:314    .text:000000000000020c .L0 
+     /tmp/ccGIBCON.s:316    .text:0000000000000210 .L0 
+     /tmp/ccGIBCON.s:317    .text:0000000000000210 .L0 
+     /tmp/ccGIBCON.s:319    .text:0000000000000214 .L0 
+     /tmp/ccGIBCON.s:321    .text:0000000000000218 .L0 
+     /tmp/ccGIBCON.s:324    .text:000000000000021c .L0 
+     /tmp/ccGIBCON.s:327    .text:0000000000000220 .L0 
+     /tmp/ccGIBCON.s:329    .text:0000000000000224 .L0 
+     /tmp/ccGIBCON.s:352    .text:0000000000000224 _Z22producerConsumer_C_APIv
+     /tmp/ccGIBCON.s:355    .text:0000000000000224 .L0 
+     /tmp/ccGIBCON.s:2617   .data.rel.local.DW.ref.__gxx_personality_v0:0000000000000000 DW.ref.__gxx_personality_v0
+     /tmp/ccGIBCON.s:358    .text:0000000000000224 .L0 
+     /tmp/ccGIBCON.s:359    .text:0000000000000228 .L0 
+     /tmp/ccGIBCON.s:365    .text:000000000000023c .L0 
+     /tmp/ccGIBCON.s:366    .text:000000000000023c .L0 
+     /tmp/ccGIBCON.s:367    .text:000000000000023c .L0 
+     /tmp/ccGIBCON.s:368    .text:000000000000023c .L0 
+     /tmp/ccGIBCON.s:369    .text:000000000000023c .L0 
+     /tmp/ccGIBCON.s:371    .text:0000000000000240 .L0 
+     /tmp/ccGIBCON.s:373    .text:0000000000000240 .L0 
+     /tmp/ccGIBCON.s:374    .text:0000000000000240 .L0 
+     /tmp/ccGIBCON.s:375    .text:0000000000000240 .L0 
+     /tmp/ccGIBCON.s:380    .text:0000000000000250 .L0 
+     /tmp/ccGIBCON.s:381    .text:0000000000000250 .L0 
+     /tmp/ccGIBCON.s:382    .text:0000000000000250 .L0 
+     /tmp/ccGIBCON.s:386    .text:0000000000000260 .L0 
+     /tmp/ccGIBCON.s:387    .text:0000000000000260 .L0 
+     /tmp/ccGIBCON.s:388    .text:0000000000000260 .L0 
+     /tmp/ccGIBCON.s:392    .text:0000000000000270 .L0 
+     /tmp/ccGIBCON.s:393    .text:0000000000000270 .L0 
+     /tmp/ccGIBCON.s:399    .text:0000000000000284 .L0 
+     /tmp/ccGIBCON.s:400    .text:0000000000000284 .L0 
+     /tmp/ccGIBCON.s:404    .text:0000000000000294 .L0 
+     /tmp/ccGIBCON.s:405    .text:0000000000000294 .L0 
+     /tmp/ccGIBCON.s:411    .text:00000000000002a8 .L0 
+     /tmp/ccGIBCON.s:412    .text:00000000000002a8 .L0 
+     /tmp/ccGIBCON.s:416    .text:00000000000002b8 .L0 
+     /tmp/ccGIBCON.s:417    .text:00000000000002b8 .L0 
+     /tmp/ccGIBCON.s:418    .text:00000000000002b8 .L0 
+     /tmp/ccGIBCON.s:419    .text:00000000000002b8 .L0 
+     /tmp/ccGIBCON.s:430    .text:00000000000002d4 .L0 
+     /tmp/ccGIBCON.s:431    .text:00000000000002d4 .L0 
+     /tmp/ccGIBCON.s:437    .text:00000000000002e8 .L0 
+     /tmp/ccGIBCON.s:438    .text:00000000000002e8 .L0 
+     /tmp/ccGIBCON.s:439    .text:00000000000002e8 .L0 
+     /tmp/ccGIBCON.s:440    .text:00000000000002e8 .L0 
+GAS LISTING /tmp/ccGIBCON.s 			page 20
+
+
+     /tmp/ccGIBCON.s:444    .text:00000000000002f0 .L0 
+     /tmp/ccGIBCON.s:445    .text:00000000000002f0 .L0 
+     /tmp/ccGIBCON.s:448    .text:00000000000002f8 .L0 
+     /tmp/ccGIBCON.s:449    .text:00000000000002f8 .L0 
+     /tmp/ccGIBCON.s:451    .text:00000000000002fc .L0 
+     /tmp/ccGIBCON.s:452    .text:00000000000002fc .L0 
+     /tmp/ccGIBCON.s:455    .text:0000000000000308 .L0 
+     /tmp/ccGIBCON.s:456    .text:0000000000000308 .L0 
+     /tmp/ccGIBCON.s:463    .text:0000000000000320 .L0 
+     /tmp/ccGIBCON.s:467    .text:0000000000000324 .L0 
+     /tmp/ccGIBCON.s:470    .text:000000000000032c .L0 
+     /tmp/ccGIBCON.s:471    .text:000000000000032c .L0 
+     /tmp/ccGIBCON.s:477    .text:0000000000000340 .L0 
+     /tmp/ccGIBCON.s:478    .text:0000000000000340 .L0 
+     /tmp/ccGIBCON.s:480    .text:0000000000000344 .L0 
+     /tmp/ccGIBCON.s:481    .text:0000000000000344 .L0 
+     /tmp/ccGIBCON.s:484    .text:0000000000000350 .L0 
+     /tmp/ccGIBCON.s:485    .text:0000000000000350 .L0 
+     /tmp/ccGIBCON.s:487    .text:0000000000000354 .L0 
+     /tmp/ccGIBCON.s:489    .text:0000000000000358 .L0 
+     /tmp/ccGIBCON.s:496    .text:000000000000036c .L0 
+     /tmp/ccGIBCON.s:500    .text:0000000000000378 .L0 
+     /tmp/ccGIBCON.s:504    .text:0000000000000384 .L0 
+     /tmp/ccGIBCON.s:510    .text:000000000000038c .L0 
+     /tmp/ccGIBCON.s:516    .text:0000000000000398 .L0 
+     /tmp/ccGIBCON.s:517    .text:0000000000000398 .L0 
+     /tmp/ccGIBCON.s:521    .text:00000000000003a0 .L0 
+     /tmp/ccGIBCON.s:527    .text:00000000000003a8 .L0 
+     /tmp/ccGIBCON.s:528    .text:00000000000003a8 .L0 
+     /tmp/ccGIBCON.s:532    .text:00000000000003b8 .L0 
+     /tmp/ccGIBCON.s:536    .text:00000000000003bc .L0 
+     /tmp/ccGIBCON.s:540    .text:00000000000003c4 .L0 
+     /tmp/ccGIBCON.s:541    .text:00000000000003c4 .L0 
+     /tmp/ccGIBCON.s:545    .text:00000000000003d4 .L0 
+     /tmp/ccGIBCON.s:546    .text:00000000000003d4 .L0 
+     /tmp/ccGIBCON.s:548    .text:00000000000003d8 .L0 
+     /tmp/ccGIBCON.s:556    .text:00000000000003f0 .L0 
+     /tmp/ccGIBCON.s:557    .text:00000000000003f4 .L0 
+     /tmp/ccGIBCON.s:558    .text:00000000000003f4 .L0 
+     /tmp/ccGIBCON.s:561    .text:00000000000003f8 .L0 
+     /tmp/ccGIBCON.s:563    .text:00000000000003fc .L0 
+     /tmp/ccGIBCON.s:566    .text:0000000000000400 .L0 
+     /tmp/ccGIBCON.s:569    .text:0000000000000404 .L0 
+     /tmp/ccGIBCON.s:572    .text:0000000000000408 .L0 
+     /tmp/ccGIBCON.s:575    .text:000000000000040c .L0 
+     /tmp/ccGIBCON.s:580    .text:0000000000000410 .L0 
+     /tmp/ccGIBCON.s:583    .text:0000000000000414 .L0 
+     /tmp/ccGIBCON.s:590    .text:000000000000042c .L0 
+     /tmp/ccGIBCON.s:615    .bss:0000000000000000 .LANCHOR0
+     /tmp/ccGIBCON.s:618    .bss:0000000000000000 _ZL9threadEnd
+     /tmp/ccGIBCON.s:623    .bss:0000000000000008 _ZL10waitForAll
+     /tmp/ccGIBCON.s:632    .text:000000000000042c .L0 
+     /tmp/ccGIBCON.s:79     .text:0000000000000070 .L0 
+     /tmp/ccGIBCON.s:146    .text:00000000000000dc .L0 
+     /tmp/ccGIBCON.s:245    .text:0000000000000184 .L0 
+     /tmp/ccGIBCON.s:334    .rodata.str1.8:0000000000000000 .LC0
+     /tmp/ccGIBCON.s:375    .text:0000000000000240 .L0 
+GAS LISTING /tmp/ccGIBCON.s 			page 21
+
+
+     /tmp/ccGIBCON.s:337    .rodata.str1.8:0000000000000020 .LC1
+     /tmp/ccGIBCON.s:382    .text:0000000000000250 .L0 
+     /tmp/ccGIBCON.s:340    .rodata.str1.8:0000000000000040 .LC2
+     /tmp/ccGIBCON.s:388    .text:0000000000000260 .L0 
+     /tmp/ccGIBCON.s:343    .rodata.str1.8:0000000000000058 .LC3
+     /tmp/ccGIBCON.s:400    .text:0000000000000284 .L0 
+     /tmp/ccGIBCON.s:346    .rodata.str1.8:0000000000000070 .LC4
+     /tmp/ccGIBCON.s:412    .text:00000000000002a8 .L0 
+     /tmp/ccGIBCON.s:432    .text:00000000000002d8 .L0 
+     /tmp/ccGIBCON.s:452    .text:00000000000002fc .L0 
+     /tmp/ccGIBCON.s:457    .text:000000000000030c .L0 
+     /tmp/ccGIBCON.s:481    .text:0000000000000344 .L0 
+     /tmp/ccGIBCON.s:493    .text:0000000000000364 .L0 
+     /tmp/ccGIBCON.s:510    .text:000000000000038c .L0 
+     /tmp/ccGIBCON.s:528    .text:00000000000003a8 .L0 
+     /tmp/ccGIBCON.s:541    .text:00000000000003c4 .L0 
+     /tmp/ccGIBCON.s:45     .text:0000000000000034 .L2
+     /tmp/ccGIBCON.s:75     .text:000000000000006c .L3
+     /tmp/ccGIBCON.s:42     .text:0000000000000030 .L4
+     /tmp/ccGIBCON.s:37     .text:0000000000000028 .L6
+     /tmp/ccGIBCON.s:143    .text:00000000000000dc .L8
+     /tmp/ccGIBCON.s:174    .text:0000000000000120 .L9
+     /tmp/ccGIBCON.s:138    .text:00000000000000d4 .L12
+     /tmp/ccGIBCON.s:241    .text:0000000000000184 .L14
+     /tmp/ccGIBCON.s:274    .text:00000000000001c4 .L16
+     /tmp/ccGIBCON.s:297    .text:00000000000001ec .L15
+     /tmp/ccGIBCON.s:227    .text:000000000000016c .L20
+     /tmp/ccGIBCON.s:235    .text:0000000000000178 .L21
+     /tmp/ccGIBCON.s:283    .text:00000000000001d4 .L22
+     /tmp/ccGIBCON.s:513    .text:0000000000000398 .L24
+     /tmp/ccGIBCON.s:508    .text:000000000000038c .L31
+     /tmp/ccGIBCON.s:464    .text:0000000000000324 .L26
+     /tmp/ccGIBCON.s:494    .text:000000000000036c .L25
+     /tmp/ccGIBCON.s:534    .text:00000000000003bc .L28
+     /tmp/ccGIBCON.s:525    .text:00000000000003a8 .L34
+     /tmp/ccGIBCON.s:554    .text:00000000000003f0 .L23
+     /tmp/ccGIBCON.s:376    .text:0000000000000248 .LEHB0
+     /tmp/ccGIBCON.s:353    .text:0000000000000224 .LFB3
+     /tmp/ccGIBCON.s:422    .text:00000000000002c4 .LEHE0
+     /tmp/ccGIBCON.s:425    .text:00000000000002cc .LEHB1
+     /tmp/ccGIBCON.s:428    .text:00000000000002d4 .LEHE1
+     /tmp/ccGIBCON.s:579    .text:0000000000000410 .L32
+     /tmp/ccGIBCON.s:433    .text:00000000000002e0 .LEHB2
+     /tmp/ccGIBCON.s:589    .text:000000000000042c .LEHE2
+     /tmp/ccGIBCON.s:1557   .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+     /tmp/ccGIBCON.s:2525   .debug_str:00000000000001ea .LASF68
+     /tmp/ccGIBCON.s:2575   .debug_str:00000000000003f2 .LASF69
+     /tmp/ccGIBCON.s:2557   .debug_str:0000000000000369 .LASF70
+     /tmp/ccGIBCON.s:5      .text:0000000000000000 .Ltext0
+     /tmp/ccGIBCON.s:626    .text:000000000000042c .Letext0
+     /tmp/ccGIBCON.s:2459   .debug_line:0000000000000000 .Ldebug_line0
+     /tmp/ccGIBCON.s:2539   .debug_str:00000000000002ee .LASF0
+     /tmp/ccGIBCON.s:2511   .debug_str:000000000000016c .LASF1
+     /tmp/ccGIBCON.s:2503   .debug_str:0000000000000139 .LASF2
+     /tmp/ccGIBCON.s:2477   .debug_str:0000000000000075 .LASF4
+     /tmp/ccGIBCON.s:2509   .debug_str:000000000000015a .LASF3
+     /tmp/ccGIBCON.s:2463   .debug_str:0000000000000013 .LASF5
+GAS LISTING /tmp/ccGIBCON.s 			page 22
+
+
+     /tmp/ccGIBCON.s:2461   .debug_str:0000000000000000 .LASF6
+     /tmp/ccGIBCON.s:2493   .debug_str:00000000000000e3 .LASF7
+     /tmp/ccGIBCON.s:2551   .debug_str:000000000000033a .LASF8
+     /tmp/ccGIBCON.s:2475   .debug_str:0000000000000067 .LASF9
+     /tmp/ccGIBCON.s:2609   .debug_str:00000000000004e8 .LASF10
+     /tmp/ccGIBCON.s:2497   .debug_str:0000000000000102 .LASF11
+     /tmp/ccGIBCON.s:2585   .debug_str:0000000000000441 .LASF12
+     /tmp/ccGIBCON.s:2547   .debug_str:0000000000000323 .LASF13
+     /tmp/ccGIBCON.s:2517   .debug_str:00000000000001b3 .LASF14
+     /tmp/ccGIBCON.s:2487   .debug_str:00000000000000b4 .LASF15
+     /tmp/ccGIBCON.s:2553   .debug_str:000000000000034a .LASF16
+     /tmp/ccGIBCON.s:2555   .debug_str:0000000000000360 .LASF17
+     /tmp/ccGIBCON.s:2601   .debug_str:00000000000004a5 .LASF19
+     /tmp/ccGIBCON.s:2471   .debug_str:0000000000000049 .LASF18
+     /tmp/ccGIBCON.s:2489   .debug_str:00000000000000ca .LASF20
+     /tmp/ccGIBCON.s:2563   .debug_str:00000000000003a6 .LASF28
+     /tmp/ccGIBCON.s:2573   .debug_str:00000000000003eb .LASF21
+     /tmp/ccGIBCON.s:2533   .debug_str:00000000000002d5 .LASF22
+     /tmp/ccGIBCON.s:2577   .debug_str:0000000000000417 .LASF23
+     /tmp/ccGIBCON.s:2515   .debug_str:00000000000001a4 .LASF24
+     /tmp/ccGIBCON.s:2491   .debug_str:00000000000000d5 .LASF25
+     /tmp/ccGIBCON.s:2541   .debug_str:00000000000002fb .LASF26
+     /tmp/ccGIBCON.s:2603   .debug_str:00000000000004ad .LASF27
+     /tmp/ccGIBCON.s:2591   .debug_str:0000000000000474 .LASF30
+     /tmp/ccGIBCON.s:2579   .debug_str:000000000000041c .LASF29
+     /tmp/ccGIBCON.s:2479   .debug_str:000000000000007c .LASF31
+     /tmp/ccGIBCON.s:2499   .debug_str:0000000000000111 .LASF71
+     /tmp/ccGIBCON.s:2571   .debug_str:00000000000003da .LASF72
+     /tmp/ccGIBCON.s:2483   .debug_str:00000000000000a4 .LASF32
+     /tmp/ccGIBCON.s:2519   .debug_str:00000000000001bf .LASF33
+     /tmp/ccGIBCON.s:2527   .debug_str:00000000000002ae .LASF34
+     /tmp/ccGIBCON.s:2495   .debug_str:00000000000000f6 .LASF73
+     /tmp/ccGIBCON.s:2535   .debug_str:00000000000002da .LASF35
+     /tmp/ccGIBCON.s:2569   .debug_str:00000000000003d0 .LASF36
+     /tmp/ccGIBCON.s:2501   .debug_str:0000000000000122 .LASF37
+     /tmp/ccGIBCON.s:2605   .debug_str:00000000000004b7 .LASF74
+     /tmp/ccGIBCON.s:591    .text:000000000000042c .LFE3
+     /tmp/ccGIBCON.s:2593   .debug_str:0000000000000483 .LASF38
+     /tmp/ccGIBCON.s:2152   .debug_loc:0000000000000000 .LLST14
+     /tmp/ccGIBCON.s:2567   .debug_str:00000000000003c8 .LASF39
+     /tmp/ccGIBCON.s:2159   .debug_loc:0000000000000023 .LLST15
+     /tmp/ccGIBCON.s:2583   .debug_str:0000000000000432 .LASF40
+     /tmp/ccGIBCON.s:2469   .debug_str:0000000000000044 .LASF41
+     /tmp/ccGIBCON.s:2202   .debug_loc:00000000000000d8 .LLST16
+     /tmp/ccGIBCON.s:461    .text:0000000000000320 .LBB5
+     /tmp/ccGIBCON.s:514    .text:0000000000000398 .LBE5
+     /tmp/ccGIBCON.s:2225   .debug_loc:000000000000013a .LLST17
+     /tmp/ccGIBCON.s:502    .text:0000000000000384 .LVL55
+     /tmp/ccGIBCON.s:519    .text:00000000000003a0 .LBB6
+     /tmp/ccGIBCON.s:538    .text:00000000000003c4 .LBE6
+     /tmp/ccGIBCON.s:2236   .debug_loc:0000000000000170 .LLST18
+     /tmp/ccGIBCON.s:530    .text:00000000000003b8 .LVL62
+     /tmp/ccGIBCON.s:378    .text:0000000000000250 .LVL41
+     /tmp/ccGIBCON.s:384    .text:0000000000000260 .LVL42
+     /tmp/ccGIBCON.s:390    .text:0000000000000270 .LVL43
+     /tmp/ccGIBCON.s:397    .text:0000000000000284 .LVL44
+     /tmp/ccGIBCON.s:402    .text:0000000000000294 .LVL45
+GAS LISTING /tmp/ccGIBCON.s 			page 23
+
+
+     /tmp/ccGIBCON.s:409    .text:00000000000002a8 .LVL46
+     /tmp/ccGIBCON.s:414    .text:00000000000002b8 .LVL47
+     /tmp/ccGIBCON.s:421    .text:00000000000002c4 .LVL48
+     /tmp/ccGIBCON.s:427    .text:00000000000002d4 .LVL49
+     /tmp/ccGIBCON.s:435    .text:00000000000002e8 .LVL50
+     /tmp/ccGIBCON.s:460    .text:0000000000000320 .LVL52
+     /tmp/ccGIBCON.s:518    .text:00000000000003a0 .LVL59
+     /tmp/ccGIBCON.s:543    .text:00000000000003d4 .LVL64
+     /tmp/ccGIBCON.s:550    .text:00000000000003e4 .LVL65
+     /tmp/ccGIBCON.s:553    .text:00000000000003f0 .LVL66
+     /tmp/ccGIBCON.s:585    .text:0000000000000420 .LVL74
+     /tmp/ccGIBCON.s:588    .text:000000000000042c .LVL75
+     /tmp/ccGIBCON.s:2485   .debug_str:00000000000000ab .LASF42
+     /tmp/ccGIBCON.s:201    .text:0000000000000144 .LFB2
+     /tmp/ccGIBCON.s:330    .text:0000000000000224 .LFE2
+     /tmp/ccGIBCON.s:2243   .debug_loc:0000000000000193 .LLST7
+     /tmp/ccGIBCON.s:2261   .debug_loc:00000000000001df .LLST8
+     /tmp/ccGIBCON.s:2279   .debug_loc:000000000000022b .LLST9
+     /tmp/ccGIBCON.s:2451   .debug_ranges:0000000000000000 .Ldebug_ranges0
+     /tmp/ccGIBCON.s:2303   .debug_loc:000000000000029b .LLST10
+     /tmp/ccGIBCON.s:232    .text:0000000000000174 .LVL26
+     /tmp/ccGIBCON.s:240    .text:0000000000000184 .LVL28
+     /tmp/ccGIBCON.s:252    .text:000000000000019c .LVL29
+     /tmp/ccGIBCON.s:263    .text:00000000000001b0 .LVL32
+     /tmp/ccGIBCON.s:285    .text:00000000000001d4 .LBB4
+     /tmp/ccGIBCON.s:298    .text:00000000000001ec .LBE4
+     /tmp/ccGIBCON.s:2310   .debug_loc:00000000000002be .LLST11
+     /tmp/ccGIBCON.s:290    .text:00000000000001e0 .LVL34
+     /tmp/ccGIBCON.s:296    .text:00000000000001ec .LVL36
+     /tmp/ccGIBCON.s:304    .text:00000000000001f8 .LVL37
+     /tmp/ccGIBCON.s:311    .text:0000000000000208 .LVL38
+     /tmp/ccGIBCON.s:2595   .debug_str:000000000000048d .LASF43
+     /tmp/ccGIBCON.s:114    .text:00000000000000b0 .LFB1
+     /tmp/ccGIBCON.s:196    .text:0000000000000144 .LFE1
+     /tmp/ccGIBCON.s:2317   .debug_loc:00000000000002e1 .LLST4
+     /tmp/ccGIBCON.s:2335   .debug_loc:000000000000032d .LLST5
+     /tmp/ccGIBCON.s:2353   .debug_loc:0000000000000379 .LLST6
+     /tmp/ccGIBCON.s:142    .text:00000000000000dc .LVL16
+     /tmp/ccGIBCON.s:155    .text:00000000000000fc .LVL17
+     /tmp/ccGIBCON.s:179    .text:000000000000012c .LVL20
+     /tmp/ccGIBCON.s:2543   .debug_str:0000000000000305 .LASF44
+     /tmp/ccGIBCON.s:9      .text:0000000000000000 .LFB0
+     /tmp/ccGIBCON.s:109    .text:00000000000000b0 .LFE0
+     /tmp/ccGIBCON.s:2377   .debug_loc:00000000000003e9 .LLST0
+     /tmp/ccGIBCON.s:2395   .debug_loc:0000000000000435 .LLST1
+     /tmp/ccGIBCON.s:2413   .debug_loc:0000000000000481 .LLST2
+     /tmp/ccGIBCON.s:2422   .debug_loc:00000000000004a6 .LLST3
+     /tmp/ccGIBCON.s:41     .text:0000000000000030 .LVL3
+     /tmp/ccGIBCON.s:60     .text:0000000000000050 .LVL6
+     /tmp/ccGIBCON.s:85     .text:0000000000000088 .LVL9
+     /tmp/ccGIBCON.s:90     .text:0000000000000094 .LVL10
+     /tmp/ccGIBCON.s:2513   .debug_str:000000000000017f .LASF45
+     /tmp/ccGIBCON.s:2581   .debug_str:0000000000000424 .LASF47
+     /tmp/ccGIBCON.s:2481   .debug_str:000000000000008b .LASF46
+     /tmp/ccGIBCON.s:2529   .debug_str:00000000000002b9 .LASF48
+     /tmp/ccGIBCON.s:2531   .debug_str:00000000000002c2 .LASF49
+     /tmp/ccGIBCON.s:2521   .debug_str:00000000000001d3 .LASF50
+GAS LISTING /tmp/ccGIBCON.s 			page 24
+
+
+     /tmp/ccGIBCON.s:2561   .debug_str:0000000000000397 .LASF51
+     /tmp/ccGIBCON.s:2597   .debug_str:0000000000000496 .LASF52
+     /tmp/ccGIBCON.s:2599   .debug_str:000000000000049f .LASF59
+     /tmp/ccGIBCON.s:2545   .debug_str:0000000000000316 .LASF61
+     /tmp/ccGIBCON.s:2565   .debug_str:00000000000003ad .LASF53
+     /tmp/ccGIBCON.s:2505   .debug_str:0000000000000147 .LASF54
+     /tmp/ccGIBCON.s:2607   .debug_str:00000000000004d3 .LASF55
+     /tmp/ccGIBCON.s:2559   .debug_str:0000000000000387 .LASF56
+     /tmp/ccGIBCON.s:2467   .debug_str:000000000000002a .LASF57
+     /tmp/ccGIBCON.s:2507   .debug_str:0000000000000150 .LASF58
+     /tmp/ccGIBCON.s:2587   .debug_str:0000000000000451 .LASF60
+     /tmp/ccGIBCON.s:2465   .debug_str:000000000000001a .LASF62
+     /tmp/ccGIBCON.s:2537   .debug_str:00000000000002df .LASF63
+     /tmp/ccGIBCON.s:2473   .debug_str:000000000000004f .LASF64
+     /tmp/ccGIBCON.s:2549   .debug_str:0000000000000333 .LASF65
+     /tmp/ccGIBCON.s:2589   .debug_str:0000000000000458 .LASF66
+     /tmp/ccGIBCON.s:2523   .debug_str:00000000000001df .LASF67
+     /tmp/ccGIBCON.s:573    .text:0000000000000408 .LVL71
+     /tmp/ccGIBCON.s:490    .text:000000000000035c .LVL54
+     /tmp/ccGIBCON.s:507    .text:000000000000038c .LVL57
+     /tmp/ccGIBCON.s:512    .text:0000000000000398 .LVL58
+     /tmp/ccGIBCON.s:564    .text:00000000000003fc .LVL68
+     /tmp/ccGIBCON.s:570    .text:0000000000000404 .LVL70
+     /tmp/ccGIBCON.s:576    .text:000000000000040c .LVL72
+     /tmp/ccGIBCON.s:578    .text:0000000000000410 .LVL73
+     /tmp/ccGIBCON.s:442    .text:00000000000002f0 .LVL51
+     /tmp/ccGIBCON.s:559    .text:00000000000003f4 .LVL67
+     /tmp/ccGIBCON.s:465    .text:0000000000000324 .LVL53
+     /tmp/ccGIBCON.s:505    .text:0000000000000388 .LVL56
+     /tmp/ccGIBCON.s:522    .text:00000000000003a4 .LVL60
+     /tmp/ccGIBCON.s:524    .text:00000000000003a8 .LVL61
+     /tmp/ccGIBCON.s:567    .text:0000000000000400 .LVL69
+     /tmp/ccGIBCON.s:204    .text:0000000000000144 .LVL23
+     /tmp/ccGIBCON.s:226    .text:000000000000016c .LVL25
+     /tmp/ccGIBCON.s:322    .text:0000000000000218 .LVL39
+     /tmp/ccGIBCON.s:221    .text:0000000000000164 .LVL24
+     /tmp/ccGIBCON.s:234    .text:0000000000000178 .LVL27
+     /tmp/ccGIBCON.s:257    .text:00000000000001a4 .LVL30
+     /tmp/ccGIBCON.s:279    .text:00000000000001cc .LVL33
+     /tmp/ccGIBCON.s:325    .text:000000000000021c .LVL40
+     /tmp/ccGIBCON.s:261    .text:00000000000001a8 .LVL31
+     /tmp/ccGIBCON.s:294    .text:00000000000001e4 .LVL35
+     /tmp/ccGIBCON.s:117    .text:00000000000000b0 .LVL13
+     /tmp/ccGIBCON.s:137    .text:00000000000000d4 .LVL15
+     /tmp/ccGIBCON.s:188    .text:0000000000000138 .LVL21
+     /tmp/ccGIBCON.s:132    .text:00000000000000cc .LVL14
+     /tmp/ccGIBCON.s:160    .text:0000000000000104 .LVL18
+     /tmp/ccGIBCON.s:173    .text:0000000000000120 .LVL19
+     /tmp/ccGIBCON.s:191    .text:000000000000013c .LVL22
+     /tmp/ccGIBCON.s:13     .text:0000000000000000 .LVL0
+     /tmp/ccGIBCON.s:36     .text:0000000000000028 .LVL2
+     /tmp/ccGIBCON.s:104    .text:00000000000000a8 .LVL12
+     /tmp/ccGIBCON.s:30     .text:0000000000000020 .LVL1
+     /tmp/ccGIBCON.s:54     .text:0000000000000040 .LVL5
+     /tmp/ccGIBCON.s:70     .text:0000000000000064 .LVL7
+     /tmp/ccGIBCON.s:46     .text:0000000000000034 .LVL4
+     /tmp/ccGIBCON.s:74     .text:000000000000006c .LVL8
+GAS LISTING /tmp/ccGIBCON.s 			page 25
+
+
+     /tmp/ccGIBCON.s:99     .text:00000000000000a0 .LVL11
+     /tmp/ccGIBCON.s:633    .debug_info:0000000000000000 .Ldebug_info0
+     /tmp/ccGIBCON.s:228    .text:000000000000016c .LBB2
+     /tmp/ccGIBCON.s:242    .text:0000000000000184 .LBE2
+     /tmp/ccGIBCON.s:247    .text:0000000000000190 .LBB3
+     /tmp/ccGIBCON.s:284    .text:00000000000001d4 .LBE3
+     /tmp/ccGIBCON.s:594    .gcc_except_table:0000000000000000 .LLSDA3
+
+UNDEFINED SYMBOLS
+_Z15thread_dispatchv
+_ZN6Buffer3putEi
+_Z10sem_signalP10KSemaphore
+__putc
+_ZN6Buffer3getEv
+_ZN6Buffer6getCntEv
+_Z11printStringPKc
+_Z8printIntiii
+_Znwm
+_ZN6BufferC1Ei
+_Z8sem_openPP10KSemaphorej
+_Z13thread_createPP7KThreadPFvPvES2_
+_Z8sem_waitP10KSemaphore
+_Z9sem_closeP10KSemaphore
+_ZN6BufferD1Ev
+_ZdlPv
+_Unwind_Resume
+__gxx_personality_v0

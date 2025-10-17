@@ -2,15 +2,15 @@
 // Created by os on 10/15/25.
 //
 
-#include "../h/Semaphore.hpp"
+#include "../h/KSemaphore.hpp"
 #include "../h/KThread.hpp"
 #include "../h/Scheduler.hpp"
 
-Semaphore *Semaphore::createSemaphore(uint64 init) {
-    return new Semaphore(init);
+KSemaphore* KSemaphore::createSemaphore(uint64 init) {
+    return new KSemaphore(init);
 }
 
-KThread* Semaphore::get() {
+KThread* KSemaphore::get() {
     if (!head) return nullptr;
 
     KThread* thread = head;
@@ -23,13 +23,13 @@ KThread* Semaphore::get() {
 }
 
 
-void Semaphore::put(KThread *thread) {
+void KSemaphore::put(KThread *thread) {
     if (!head) head = thread;
     else tail->semaphoreNext = thread;
     tail = thread;
 }
 
-void Semaphore::wait() {
+void KSemaphore::wait() {
     val--;
 
     if (val < 0) {
@@ -39,7 +39,7 @@ void Semaphore::wait() {
     }
 }
 
-void Semaphore::signal() {
+void KSemaphore::signal() {
     val++;
 
     if (val <= 0) {
@@ -52,7 +52,7 @@ void Semaphore::signal() {
     }
 }
 
-void Semaphore::close() {
+void KSemaphore::close() {
     while (head) {
         KThread* thread = get();
         thread->setState(READY);

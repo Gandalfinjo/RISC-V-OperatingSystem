@@ -10,9 +10,9 @@
 
 class KThread;
 
-class Semaphore {
+class KSemaphore {
 public:
-    static Semaphore* createSemaphore(uint64 init);
+    static KSemaphore* createSemaphore(uint64 init);
 
     void wait();
     void signal();
@@ -41,7 +41,7 @@ public:
     }
 
 private:
-    explicit Semaphore(uint64 init) : val(init) {}
+    explicit KSemaphore(uint64 init) : val(init) {}
 
     int val;
     KThread* head = nullptr;

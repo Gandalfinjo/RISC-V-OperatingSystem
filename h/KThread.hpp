@@ -22,7 +22,7 @@ public:
     static KThread* running;
 
     friend class Scheduler;
-    friend class Semaphore;
+    friend class KSemaphore;
 
     using Body = void(*)(void*);
 

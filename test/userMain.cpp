@@ -2,7 +2,7 @@
 
 #define LEVEL_1_IMPLEMENTED 0
 #define LEVEL_2_IMPLEMENTED 1
-#define LEVEL_3_IMPLEMENTED 0
+#define LEVEL_3_IMPLEMENTED 1
 #define LEVEL_4_IMPLEMENTED 0
 
 #if LEVEL_2_IMPLEMENTED == 1
@@ -18,7 +18,7 @@
 // TEST 3 (zadatak 3., kompletan C API sa semaforima, sinhrona promena konteksta)
 #include "../test/ConsumerProducer_C_API_test.hpp"
 // TEST 4 (zadatak 3., kompletan CPP API sa semaforima, sinhrona promena konteksta)
-#include "../test/ConsumerProducer_CPP_Sync_API_test.hpp"
+//#include "../test/ConsumerProducer_CPP_Sync_API_test.hpp"
 #endif
 
 #if LEVEL_4_IMPLEMENTED == 1
@@ -34,7 +34,7 @@ void userMain() {
     printString("Unesite broj testa? [1-7]\n");
     // int test = __getc() - '0';
     // __getc(); // Enter posle broja
-    int test = 2;
+    int test = 3;
 
     if ((test >= 1 && test <= 2) || test == 7) {
         if (LEVEL_2_IMPLEMENTED == 0) {
@@ -78,8 +78,8 @@ void userMain() {
             break;
         case 4:
 #if LEVEL_3_IMPLEMENTED == 1
-            producerConsumer_CPP_Sync_API();
-            printString("TEST 4 (zadatak 3., kompletan CPP API sa semaforima, sinhrona promena konteksta)\n");
+            // producerConsumer_CPP_Sync_API();
+            // printString("TEST 4 (zadatak 3., kompletan CPP API sa semaforima, sinhrona promena konteksta)\n");
 #endif
             break;
         case 5:

@@ -6,7 +6,7 @@
 
 #include "../h/MemoryAllocator.hpp"
 #include "../h/KThread.hpp"
-#include "../h/Semaphore.hpp"
+#include "../h/KSemaphore.hpp"
 #include "../lib/hw.h"
 
 constexpr uint64 MEM_ALLOC = 0x01;
@@ -117,7 +117,7 @@ void Riscv::trapHandler() {
                 break;
             }
             case SEM_OPEN: {
-                Semaphore** handle = nullptr;
+                KSemaphore** handle = nullptr;
                 unsigned init;
 
                 asm volatile("ld a1, 11*8(%0)" :: "r"(framePointer));
@@ -125,7 +125,7 @@ void Riscv::trapHandler() {
                 asm volatile("ld a2, 12*8(%0)" :: "r"(framePointer));
                 asm volatile("mv %0, a2" : "=r"(init));
 
-                *handle = Semaphore::createSemaphore(init);
+                *handle = KSemaphore::createSemaphore(init);
 
                 if (*handle != nullptr) asm volatile("li a0, 0");
                 else asm volatile("li a0, -1");
@@ -135,7 +135,7 @@ void Riscv::trapHandler() {
                 break;
             }
             case SEM_CLOSE: {
-                Semaphore* handle = nullptr;
+                KSemaphore* handle = nullptr;
 
                 asm volatile("ld a1, 11*8(%0)" :: "r"(framePointer));
                 asm volatile("mv %0, a1" : "=r"(handle));
@@ -149,7 +149,7 @@ void Riscv::trapHandler() {
                 break;
             }
             case SEM_WAIT: {
-                Semaphore* handle = nullptr;
+                KSemaphore* handle = nullptr;
 
                 asm volatile("ld a1, 11*8(%0)" :: "r"(framePointer));
                 asm volatile("mv %0, a1" : "=r"(handle));
@@ -163,7 +163,7 @@ void Riscv::trapHandler() {
                 break;
             }
             case SEM_SIGNAL: {
-                Semaphore* handle = nullptr;
+                KSemaphore* handle = nullptr;
 
                 asm volatile("ld a1, 11*8(%0)" :: "r"(framePointer));
                 asm volatile("mv %0, a1" : "=r"(handle));

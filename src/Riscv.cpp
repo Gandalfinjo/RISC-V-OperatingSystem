@@ -8,11 +8,16 @@
 #include "../h/KThread.hpp"
 #include "../h/KSemaphore.hpp"
 #include "../lib/hw.h"
+#include "../lib/console.h"
+#include "../test/printing.hpp"
 
 constexpr uint64 MEM_ALLOC = 0x01;
 constexpr uint64 MEM_FREE = 0x02;
 constexpr uint64 MEM_GET_FREE_SPACE = 0x03;
 constexpr uint64 MEM_GET_LARGEST_FREE_BLOCK = 0x04;
+
+constexpr uint64 USER_MODE = 0x08;
+constexpr uint64 KERNEL_MODE = 0x09;
 
 constexpr uint64 THREAD_CREATE = 0x11;
 constexpr uint64 THREAD_EXIT = 0x12;
@@ -23,20 +28,31 @@ constexpr uint64 SEM_CLOSE = 0x22;
 constexpr uint64 SEM_WAIT = 0x23;
 constexpr uint64 SEM_SIGNAL = 0x24;
 
+constexpr uint64 GETC = 0x41;
+constexpr uint64 PUTC = 0x42;
+
+void Riscv::popSppSpie()
+{
+    mc_sstatus(SSTATUS_SPP);
+    asm volatile("csrw sepc, ra");
+    asm volatile("sret");
+}
+
+
 void Riscv::setupTrapHandler() {
     unsigned long addr = (unsigned long)&trap_handler;
-    asm volatile("csrw stvec, %0" :: "r"(addr));
+    w_stvec(addr);
 }
 
 void Riscv::trapHandler() {
-    uint64 scause = 0, sepc = 0;
-    asm volatile("csrr %0, scause" : "=r"(scause));
-    asm volatile("csrr %0, sepc" : "=r"(sepc));
+    uint64 scause = r_scause();
+    uint64 sepc = r_sepc();
 
     uint64 interrupt = scause >> 63;
     uint64 cause = scause & 0x7FFFFFFFFFFFFFFF;
 
     if (interrupt == 0 && (cause == 8 || cause == 9)) {
+        uint64 sstatus = r_sstatus();
         uint64 code;
         asm volatile("mv %0, a0" : "=r"(code));
 
@@ -71,6 +87,14 @@ void Riscv::trapHandler() {
                 asm volatile("sd a0, 10*8(%0)" :: "r"(framePointer));
                 break;
             }
+            case USER_MODE: {
+                mc_sstatus(SSTATUS_SPP);
+                break;
+           }
+            case KERNEL_MODE: {
+                ms_sstatus(SSTATUS_SPP);
+                break;
+            }
             case THREAD_CREATE: {
                 KThread** handle = nullptr;
                 void (*start_routine)(void*) = nullptr;
@@ -86,9 +110,7 @@ void Riscv::trapHandler() {
                 asm volatile("ld a4, 14*8(%0)" :: "r"(framePointer));
                 asm volatile("mv %0, a4" : "=r"(stack));
 
-                size_t stackSize = DEFAULT_STACK_SIZE;
-
-                *handle = KThread::createThread(start_routine, args, stack, stackSize);
+                *handle = KThread::createThread(start_routine, args, stack);
 
                 if (*handle != nullptr) {
                     (*handle)->start();
@@ -176,11 +198,23 @@ void Riscv::trapHandler() {
 
                 break;
             }
+            case GETC: {
+                char c = __getc();
+                asm volatile("mv a0, %0" :: "r"(c));
+                break;
+            }
+            case PUTC: {
+                char c;
+                asm volatile("mv %0, a1" : "=r"(c));
+                __putc(c);
+                break;
+            }
             default:
                 break;
         }
 
         sepc += 4;
-        asm volatile("csrw sepc, %0" :: "r"(sepc));
+        w_sepc(sepc);
+        w_sstatus(sstatus);
     }
 }

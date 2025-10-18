@@ -49,6 +49,16 @@ size_t mem_get_largest_free_block() {
     return result;
 }
 
+void userMode() {
+    asm volatile("li a0, 0x08");
+    asm volatile("ecall");
+}
+
+void kernelMode() {
+    asm volatile("li a0, 0x09");
+    asm volatile("ecall");
+}
+
 int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg) {
     if (!handle || !start_routine) return -1;
 
@@ -131,4 +141,20 @@ int sem_signal(sem_t id) {
     asm volatile("mv %0, a0" : "=r"(result));
 
     return result;
+}
+
+char getc() {
+    char c;
+
+    asm volatile("li a0, 0x41");
+    asm volatile("ecall");
+    asm volatile("mv %0, a0" : "=r"(c));
+
+    return c;
+}
+
+void putc(char c) {
+    asm volatile("mv a1, %0" :: "r"(c));
+    asm volatile("li a0, 0x42");
+    asm volatile("ecall");
 }

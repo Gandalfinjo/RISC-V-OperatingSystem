@@ -4,22 +4,28 @@
 
 #include "../h/KThread.hpp"
 #include "../h/Scheduler.hpp"
-#include "../h/MemoryAllocator.hpp"
 #include "../lib/hw.h"
 
 KThread* KThread::running = nullptr;
 
 int KThread::staticId = 0;
 
-KThread::KThread(Body b, void* a, size_t stackSizeBytes)
-    : id(staticId++), stack(nullptr), stackSize(stackSizeBytes), body(b), args(a), state(NEW), schedulerNext(nullptr), semaphoreNext(nullptr) {
-    allocateStack(stackSizeBytes);
+KThread::KThread(Body body, void* args, void* stack)
+    : body(body), id(staticId++), args(args), stack(body != nullptr ? (char*)stack : nullptr),
+    context({body != nullptr ? (uint64)&wrapper : 0, stack != nullptr ? (uint64)&this->stack[DEFAULT_STACK_SIZE] : 0}),
+    state(NEW) {
+    if (body != nullptr) {
+        //Scheduler::put(this);
+    }
 }
 
-KThread::KThread(Body b, void* a, void* externalStackBase, size_t externalStackSize)
-    : id(staticId++), stack(nullptr), stackSize(0), body(b), args(a), state(NEW), schedulerNext(nullptr), semaphoreNext(nullptr) {
-    stack = externalStackBase;
-    stackSize = externalStackSize;
+KThread::KThread(Body body)
+    : body(body), id(staticId++), args(nullptr), stack(body != nullptr ? new char[DEFAULT_STACK_SIZE] : nullptr),
+    context({body != nullptr ? (uint64)&wrapper : 0, stack != nullptr ? (uint64) &stack[DEFAULT_STACK_SIZE] : 0}),
+    state(NEW) {
+    if (body != nullptr) {
+        //Scheduler::put(this);
+    }
 }
 
 KThread::~KThread() {
@@ -29,27 +35,17 @@ KThread::~KThread() {
     }
 }
 
-KThread* KThread::createThread(Body b, void* a, size_t stackSizeBytes) {
-    return new KThread(b, a, stackSizeBytes);
+KThread* KThread::createThread(Body body, void* args, void* stack) {
+    return new KThread(body, args, stack);
 }
 
-KThread* KThread::createThread(Body b, void* a, void* externalStackBase, size_t externalStackSize) {
-    return new KThread(b, a, externalStackBase, externalStackSize);
-}
-
-void KThread::allocateStack(size_t bytes) {
-    size_t blocks = bytes / MEM_BLOCK_SIZE;
-    if (bytes % MEM_BLOCK_SIZE != 0) blocks++;
-
-    stack = MemoryAllocator::mem_alloc(blocks);
-    stackSize = blocks * MEM_BLOCK_SIZE;
+KThread* KThread::createThread(Body body) {
+    return new KThread(body);
 }
 
 void KThread::start() {
     if (state != NEW) return;
 
-    void* stackTop = (char*)stack + stackSize;
-    initContext(&context, wrapper, stackTop);
     state = READY;
     Scheduler::put(this);
 }

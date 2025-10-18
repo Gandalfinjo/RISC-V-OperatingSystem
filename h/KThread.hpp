@@ -26,12 +26,10 @@ public:
 
     using Body = void(*)(void*);
 
-    KThread(Body, void*, size_t stackSizeBytes = DEFAULT_STACK_SIZE);
-    KThread(Body, void*, void*, size_t);
     ~KThread();
 
-    static KThread* createThread(Body, void*, size_t stackSizeBytes = DEFAULT_STACK_SIZE);
-    static KThread* createThread(Body, void*, void*, size_t);
+    static KThread* createThread(Body, void*, void*);
+    static KThread* createThread(Body);
 
     void start();                       // prepare and put in the Scheduler
     void exit();                        // mark as finished (could be called from wrapper)
@@ -66,23 +64,24 @@ public:
     }
 
 private:
+    explicit KThread(Body, void*, void*);
+    explicit KThread(Body);
+
     struct Context {
         size_t ra;
         size_t sp;
     };
 
-    int id;
-    void* stack;
-    size_t stackSize;
-    Context context;
     Body body;
+    int id;
     void* args;
+    char* stack;
+    Context context;
 
     ThreadState state;
     KThread* schedulerNext;
     KThread* semaphoreNext;
 
-    void allocateStack(size_t bytes);   // Helper: make byte size in blocks and allocate
     static void contextSwitch(Context* oldContext, Context* newContext);
     static void initContext(Context* context, void (*entry)(), void* stackTop);
 };

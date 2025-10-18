@@ -12,6 +12,9 @@ int mem_free(void*);
 size_t mem_get_free_space();
 size_t mem_get_largest_free_block();
 
+void userMode();
+void kernelMode();
+
 class KThread;
 typedef KThread* thread_t;
 int thread_create(thread_t*, void(*)(void*), void*);
@@ -24,5 +27,8 @@ int sem_open(sem_t*, unsigned);
 int sem_close(sem_t);
 int sem_wait(sem_t);
 int sem_signal(sem_t);
+
+char getc();
+void putc(char);
 
 #endif //PROJECT_BASE_SYSCALL_C_HPP

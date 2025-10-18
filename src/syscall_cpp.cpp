@@ -67,3 +67,11 @@ int Semaphore::wait() {
 int Semaphore::signal() {
     return sem_signal(myHandle);
 }
+
+char Console::getc() {
+    return ::getc();
+}
+
+void Console::putc(char c) {
+    ::putc(c);
+}

@@ -9,15 +9,11 @@
 #include "../h/KSemaphore.hpp"
 #include "../lib/hw.h"
 #include "../lib/console.h"
-#include "../test/printing.hpp"
 
 constexpr uint64 MEM_ALLOC = 0x01;
 constexpr uint64 MEM_FREE = 0x02;
 constexpr uint64 MEM_GET_FREE_SPACE = 0x03;
 constexpr uint64 MEM_GET_LARGEST_FREE_BLOCK = 0x04;
-
-constexpr uint64 USER_MODE = 0x08;
-constexpr uint64 KERNEL_MODE = 0x09;
 
 constexpr uint64 THREAD_CREATE = 0x11;
 constexpr uint64 THREAD_EXIT = 0x12;
@@ -85,14 +81,6 @@ void Riscv::trapHandler() {
                 size_t largest = MemoryAllocator::mem_get_largest_free_block();
                 asm volatile("mv a0, %0" :: "r"(largest));
                 asm volatile("sd a0, 10*8(%0)" :: "r"(framePointer));
-                break;
-            }
-            case USER_MODE: {
-                mc_sstatus(SSTATUS_SPP);
-                break;
-           }
-            case KERNEL_MODE: {
-                ms_sstatus(SSTATUS_SPP);
                 break;
             }
             case THREAD_CREATE: {
@@ -215,6 +203,9 @@ void Riscv::trapHandler() {
 
         sepc += 4;
         w_sepc(sepc);
+        if (wasUserMode) {
+            returnToUser();
+        }
         w_sstatus(sstatus);
     }
 }

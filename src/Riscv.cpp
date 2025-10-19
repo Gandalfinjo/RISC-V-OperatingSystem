@@ -203,9 +203,6 @@ void Riscv::trapHandler() {
 
         sepc += 4;
         w_sepc(sepc);
-        if (wasUserMode) {
-            returnToUser();
-        }
         w_sstatus(sstatus);
     }
 }

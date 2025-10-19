@@ -56,6 +56,7 @@ void KSemaphore::close() {
     while (head) {
         KThread* thread = get();
         thread->setState(READY);
+        thread->semaphoreNext = nullptr;
         Scheduler::put(thread);
     }
 }

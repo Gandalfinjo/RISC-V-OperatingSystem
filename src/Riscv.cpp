@@ -186,13 +186,14 @@ void Riscv::trapHandler() {
                 break;
             }
             case GETC: {
-                char c = __getc();
-                asm volatile("mv a0, %0" :: "r"(c));
+                int c = __getc();
+                asm volatile ("mv t0, %0" : : "r"(c));
+                asm volatile ("sw t0, 80(x8)");
                 break;
             }
             case PUTC: {
                 char c;
-                asm volatile("mv %0, a1" : "=r"(c));
+                asm volatile ("mv %0, a1" : "=r" (c));
                 __putc(c);
                 break;
             }

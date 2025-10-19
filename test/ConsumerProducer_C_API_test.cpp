@@ -77,18 +77,18 @@ static void consumer(void *arg) {
 }
 
 void producerConsumer_C_API() {
-    // char input[30];
+    char input[30];
     int n, threadNum;
 
     printString("Unesite broj proizvodjaca?\n");
-    // getString(input, 30);
-    // threadNum = stringToInt(input);
-    threadNum = 10;
+    getString(input, 30);
+    threadNum = stringToInt(input);
+    // threadNum = 10;
 
     printString("Unesite velicinu bafera?\n");
-    // getString(input, 30);
-    // n = stringToInt(input);
-    n = 30;
+    getString(input, 30);
+    n = stringToInt(input);
+    // n = 30;
 
     printString("Broj proizvodjaca "); printInt(threadNum);
     printString(" i velicina bafera "); printInt(n);

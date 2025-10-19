@@ -49,16 +49,6 @@ size_t mem_get_largest_free_block() {
     return result;
 }
 
-void userMode() {
-    asm volatile("li a0, 0x08");
-    asm volatile("ecall");
-}
-
-void kernelMode() {
-    asm volatile("li a0, 0x09");
-    asm volatile("ecall");
-}
-
 int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg) {
     if (!handle || !start_routine) return -1;
 

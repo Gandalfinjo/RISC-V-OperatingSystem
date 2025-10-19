@@ -23,6 +23,7 @@ public:
 
     friend class Scheduler;
     friend class KSemaphore;
+    friend class Riscv;
 
     using Body = void(*)(void*);
 

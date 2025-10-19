@@ -36,7 +36,7 @@ void Riscv::popSppSpie()
 
 
 void Riscv::setupTrapHandler() {
-    unsigned long addr = (unsigned long)&trap_handler;
+    uint64 addr = (uint64)&trap_handler;
     w_stvec(addr);
 }
 
@@ -114,7 +114,6 @@ void Riscv::trapHandler() {
                 if (KThread::running) {
                     KThread::running->exit();
                 }
-
                 KThread::dispatch();
 
                 asm volatile("li a0, 0");
@@ -204,5 +203,11 @@ void Riscv::trapHandler() {
         sepc += 4;
         w_sepc(sepc);
         w_sstatus(sstatus);
+    }
+    else if (interrupt == 1 && cause == 1) {
+        mc_sip(SIP_SSIP);
+    }
+    else if (interrupt == 1 && cause == 9) {
+        console_handler();
     }
 }

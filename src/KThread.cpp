@@ -4,6 +4,7 @@
 
 #include "../h/KThread.hpp"
 #include "../h/Scheduler.hpp"
+#include "../h/Riscv.hpp"
 #include "../lib/hw.h"
 
 KThread* KThread::running = nullptr;
@@ -29,10 +30,8 @@ KThread::KThread(Body body)
 }
 
 KThread::~KThread() {
-    if (stack) {
-        MemoryAllocator::mem_free(stack);
-        stack = nullptr;
-    }
+    MemoryAllocator::mem_free(stack);
+    stack = nullptr;
 }
 
 KThread* KThread::createThread(Body body, void* args, void* stack) {
@@ -55,6 +54,7 @@ void KThread::exit() {
 }
 
 void KThread::wrapper() {
+    Riscv::popSppSpie();
     running->body(running->args);
     running->exit();
     yield();

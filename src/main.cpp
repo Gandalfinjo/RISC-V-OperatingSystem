@@ -23,8 +23,9 @@ void main() {
 
     thread_create(&userBody, &userWrapper, nullptr);
 
+    Riscv::ms_sstatus(Riscv::SSTATUS_SIE);
+
     while (!Scheduler::isEmpty()) {
         KThread::yield();
     }
-
 }

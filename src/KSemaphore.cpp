@@ -27,6 +27,7 @@ void KSemaphore::put(KThread *thread) {
     if (!head) head = thread;
     else tail->semaphoreNext = thread;
     tail = thread;
+    thread->semaphoreNext = nullptr;
 }
 
 void KSemaphore::wait() {

@@ -1,19 +1,29 @@
+#include "../h/syscall_cpp.hpp"
 
-#include "../h/syscall_c.hpp"
+#include "buffer_CPP_API.hpp"
 
-#include "buffer.hpp"
-
-static sem_t waitForAll;
+static Semaphore* waitForAll;
 
 struct thread_data {
     int id;
-    Buffer *buffer;
-    sem_t wait;
+    BufferCPP *buffer;
+    Semaphore* wait;
 };
 
 static volatile int threadEnd = 0;
 
-static void producerKeyboard(void *arg) {
+class ProducerKeyboard:public Thread {
+    thread_data* td;
+    void producerKeyboard(void *arg);
+public:
+    ProducerKeyboard(thread_data* _td):Thread(), td(_td) {}
+
+    void run() override {
+        producerKeyboard(td);
+    }
+};
+
+void ProducerKeyboard::producerKeyboard(void *arg) {
     struct thread_data *data = (struct thread_data *) arg;
 
     int key;
@@ -23,17 +33,28 @@ static void producerKeyboard(void *arg) {
         i++;
 
         if (i % (10 * data->id) == 0) {
-            thread_dispatch();
+            Thread::dispatch();
         }
     }
 
     threadEnd = 1;
-    data->buffer->put('!');
+    td->buffer->put('!');
 
-    sem_signal(data->wait);
+    data->wait->signal();
 }
 
-static void producer(void *arg) {
+class ProducerSync:public Thread {
+    thread_data* td;
+    void producer(void *arg);
+public:
+    ProducerSync(thread_data* _td):Thread(), td(_td) {}
+
+    void run() override {
+        producer(td);
+    }
+};
+
+void ProducerSync::producer(void *arg) {
     struct thread_data *data = (struct thread_data *) arg;
 
     int i = 0;
@@ -42,14 +63,25 @@ static void producer(void *arg) {
         i++;
 
         if (i % (10 * data->id) == 0) {
-            thread_dispatch();
+            Thread::dispatch();
         }
     }
 
-    sem_signal(data->wait);
+    data->wait->signal();
 }
 
-static void consumer(void *arg) {
+class ConsumerSync:public Thread {
+    thread_data* td;
+    void consumer(void *arg);
+public:
+    ConsumerSync(thread_data* _td):Thread(), td(_td) {}
+
+    void run() override {
+        consumer(td);
+    }
+};
+
+void ConsumerSync::consumer(void *arg) {
     struct thread_data *data = (struct thread_data *) arg;
 
     int i = 0;
@@ -60,7 +92,7 @@ static void consumer(void *arg) {
         putc(key);
 
         if (i % (5 * data->id) == 0) {
-            thread_dispatch();
+            Thread::dispatch();
         }
 
         if (i % 80 == 0) {
@@ -68,15 +100,16 @@ static void consumer(void *arg) {
         }
     }
 
-    while (data->buffer->getCnt() > 0) {
-        int key = data->buffer->get();
-        putc(key);
+
+    while (td->buffer->getCnt() > 0) {
+        int key = td->buffer->get();
+        Console::putc(key);
     }
 
-    sem_signal(data->wait);
+    data->wait->signal();
 }
 
-void producerConsumer_C_API() {
+void producerConsumer_CPP_Sync_API() {
     char input[30];
     int n, threadNum;
 
@@ -100,38 +133,47 @@ void producerConsumer_C_API() {
         return;
     }
 
-    Buffer *buffer = new Buffer(n);
+    BufferCPP *buffer = new BufferCPP(n);
 
-    sem_open(&waitForAll, 0);
+    waitForAll = new Semaphore(0);
 
-    thread_t threads[threadNum];
-    thread_t consumerThread;
+    Thread* threads[threadNum];
+    Thread* consumerThread;
 
     struct thread_data data[threadNum + 1];
 
     data[threadNum].id = threadNum;
     data[threadNum].buffer = buffer;
     data[threadNum].wait = waitForAll;
-    thread_create(&consumerThread, consumer, data + threadNum);
+    consumerThread = new ConsumerSync(data+threadNum);
+    consumerThread->start();
 
     for (int i = 0; i < threadNum; i++) {
         data[i].id = i;
         data[i].buffer = buffer;
         data[i].wait = waitForAll;
 
-        thread_create(threads + i,
-                      i > 0 ? producer : producerKeyboard,
-                      data + i);
+        if(i>0) {
+            threads[i] = new ProducerSync(data+i);
+        } else {
+            threads[i] = new ProducerKeyboard(data+i);
+        }
+
+        threads[i]->start();
     }
 
-    thread_dispatch();
+    Thread::dispatch();
 
     for (int i = 0; i <= threadNum; i++) {
-        sem_wait(waitForAll);
+        waitForAll->wait();
     }
 
-    sem_close(waitForAll);
-
+    for (int i = 0; i < threadNum; i++) {
+        delete threads[i];
+    }
+    delete consumerThread;
+    delete waitForAll;
     delete buffer;
 
 }
+

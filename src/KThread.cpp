@@ -63,7 +63,7 @@ void KThread::wrapper() {
 void KThread::dispatch() {
     KThread* old = running;
 
-    if (old && old->state != FINISHED) {
+    if (old && old->state != FINISHED && old->state != BLOCKED) {
         old->state = READY;
         Scheduler::put(old);
     }

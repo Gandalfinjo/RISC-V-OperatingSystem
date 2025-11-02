@@ -10,6 +10,8 @@
 #include "../lib/hw.h"
 #include "../lib/console.h"
 
+#include "../test/printing.hpp"
+
 constexpr uint64 MEM_ALLOC = 0x01;
 constexpr uint64 MEM_FREE = 0x02;
 constexpr uint64 MEM_GET_FREE_SPACE = 0x03;
@@ -187,13 +189,13 @@ void Riscv::trapHandler() {
             }
             case GETC: {
                 int c = __getc();
-                asm volatile ("mv t0, %0" : : "r"(c));
-                asm volatile ("sw t0, 80(x8)");
+                asm volatile("mv t0, %0" : : "r"(c));
+                asm volatile("sw t0, 80(x8)");
                 break;
             }
             case PUTC: {
                 char c;
-                asm volatile ("mv %0, a1" : "=r" (c));
+                asm volatile("mv %0, a1" : "=r" (c));
                 __putc(c);
                 break;
             }
@@ -210,5 +212,10 @@ void Riscv::trapHandler() {
     }
     else if (interrupt == 1 && cause == 9) {
         console_handler();
+    }
+    else {
+        printString("ERROR! SCAUSE:");
+        printInt(scause);
+        printString("\n");
     }
 }

@@ -28,7 +28,7 @@ void ProducerKeyboard::producerKeyboard(void *arg) {
 
     int key;
     int i = 0;
-    while ((key = getc()) != 0x2f) {
+    while ((key = getc()) != 0x1b) {
         data->buffer->put(key);
         i++;
 

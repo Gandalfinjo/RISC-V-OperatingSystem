@@ -213,9 +213,4 @@ void Riscv::trapHandler() {
     else if (interrupt == 1 && cause == 9) {
         console_handler();
     }
-    else {
-        printString("ERROR! SCAUSE:");
-        printInt(scause);
-        printString("\n");
-    }
 }
